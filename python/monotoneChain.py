@@ -1,24 +1,25 @@
 from point import Point
 
+# Thee Points: O, A, B
+# Two Vectors: OA, OB
+# If the 2D cross product is less than or equal to zero, the vectors are oriented clockwise.
 def cw (o, a, b):
     return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x) <= 0
 
-def monotoneChain(point):
-    point = Point.sort(point)
+def traverse(points):
+    output = []
 
-    l = []
-    u = []
+    for p in points:
+        while len(output) > 1 and cw(output[-2], output[-1], p):
+            output.pop()
+        output.append(p)
 
-    for p in point:
-        while len(l) > 1 and cw(l[-2], l[-1], p):
-            l.pop()
-        l.append(p)
+    return output
 
-    for p in reversed(point):
-        while len(u) > 1 and cw(u[-2], u[-1], p):
-            u.pop()
-        u.append(p)
+def monotoneChain(points):
+    points = Point.sort(points)
+
+    l = traverse(points)
+    u = traverse(reversed(points))
 
     return l[:-1] + u[:-1]
-
-print monotoneChain([Point(i / 10, i % 10) for i in range(100)])

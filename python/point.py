@@ -5,12 +5,9 @@ class Point:
         self.x = x
         self.y = y
 
-    def __str__(self):
-        return "(%d, %d)" % (self.x, self.y)
-
     def __repr__(self):
-        return self.__str__()
+        return "(%f, %f)" % (self.x, self.y)
 
     @staticmethod
-    def sort(point):
-        return sorted(point, key=attrgetter('x', 'y'))
+    def sort(points):
+        return sorted(points, key=attrgetter('x', 'y'))
