@@ -1,6 +1,6 @@
 from point import Point
 
-# Thee Points: O, A, B
+# Three Points: O, A, B
 # Two Vectors: OA, OB
 # If the 2D cross product is greater than zero, the vectors are oriented counterclockwise.
 def ccw (o, a, b):
