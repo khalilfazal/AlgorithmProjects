@@ -25,8 +25,7 @@ scatter(
     c = 'r'
 )
 
-#hull = monotoneChain(map(lambda (x, y): Point(x, y), points))
-hull = smullen(map(lambda (x, y): Point(x, y), points))
+hull = monotoneChain(map(lambda (x, y): Point(x, y), points))
 
 # Connect the last point on the hull with the first point
 if len(hull) > 0:
