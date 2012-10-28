@@ -20,8 +20,16 @@ def traverse(points):
 
 def monotoneChain(points):
     points = sorted(points, key = attrgetter('x', 'y'))
+    lower = upper = []
 
-    l = traverse(points)
-    u = traverse(reversed(points))
+    for p in points:
+        while len(lower) > 1 and not ccw(lower[-2], lower[-1], p):
+            lower.pop()
+        lower.append(p)
 
-    return l[:-1] + u[:-1]
+    for p in reversed(points):
+        while len(upper) > 1 and not ccw(upper[-2], upper[-1], p):
+            upper.pop()
+        upper.append(p)
+
+    return lower[:-1] + upper[:-1]

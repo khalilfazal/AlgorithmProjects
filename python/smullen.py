@@ -1,23 +1,24 @@
 from point import Point
 from operator import attrgetter
 
-def concavity(point1, point2, point3):
-    dy1 = point2.y - point1.y
-    dy2 = point3.y - point2.y
+def isConcaveUp(p1, p2, p3):
+    dy2 = p3.y - p2.y
+    dy1 = p2.y - p1.y
 
-    return dy2 - dy1
+    return dy2 - dy1 >= 0
 
 def smullen(points):
     points = sorted(points, key = attrgetter('x', 'y'))
-    upper = lower = points
+    upper = lower = []
 
-    for i in range(0, len(points)):
-        if i + 2 < len(upper):
-            if concavity(upper[i], upper[i + 1], upper[i + 2]) < 0:
-                del upper[i + 1]
+    for i in points:
+        upper.append(i)
+        if len(upper) > 2 and not isConcaveUp (upper[-3], upper[-2], upper[-1]):
+            del(upper[-2])
 
-        if i + 2 < len(lower):
-            if concavity(lower[i], lower[i + 1], lower[i + 2]) > 0:
-                del lower[i + 1]
+    for i in reversed(points):
+        lower.append(i)
+        if len(lower) > 2 and isConcaveUp (lower[-3], lower[-2], lower[-1]):
+            del(lower[-2])
 
     return upper + lower
