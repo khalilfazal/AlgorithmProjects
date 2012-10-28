@@ -1,4 +1,6 @@
 from point import Point
+from operator import attrgetter
+
 
 # Thee Points: O, A, B
 # Two Vectors: OA, OB
@@ -17,7 +19,7 @@ def traverse(points):
     return output
 
 def monotoneChain(points):
-    points = Point.sort(points)
+    points = sorted(points, key = attrgetter('x', 'y'))
 
     l = traverse(points)
     u = traverse(reversed(points))
