@@ -8,7 +8,7 @@ def isConcaveUp(p1, p2, p3):
     return dy2 - dy1 >= 0
 
 def smullen(points):
-    points = sorted(points, key = attrgetter('x', 'y'))
+    points = Point.sort(points)
     upper = lower = []
 
     for i in points:

@@ -7,3 +7,7 @@ class Point:
 
     def __repr__(self):
         return "(%f, %f)" % (self.x, self.y)
+
+    @staticmethod
+    def sort(points):
+        return sorted(points, key=attrgetter('x', 'y'))

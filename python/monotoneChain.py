@@ -8,18 +8,8 @@ from operator import attrgetter
 def ccw (o, a, b):
     return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x) > 0
 
-def traverse(points):
-    output = []
-
-    for p in points:
-        while len(output) > 1 and not ccw(output[-2], output[-1], p):
-            output.pop()
-        output.append(p)
-
-    return output
-
 def monotoneChain(points):
-    points = sorted(points, key = attrgetter('x', 'y'))
+    points = Point.sort(points)
     lower = upper = []
 
     for p in points:
