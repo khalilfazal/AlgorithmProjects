@@ -3,7 +3,6 @@ from matplotlib.pyplot  import xlim, ylim
 from sys                import maxint
 from point              import Point
 from monotoneChain      import monotoneChain
-from smullen            import smullen
 
 plot()
 
