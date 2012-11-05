@@ -10,7 +10,8 @@ def ccw (o, a, b):
 
 def monotoneChain(points):
     points = Point.sort(points)
-    lower = upper = []
+    lower = []
+    upper = []
 
     for p in points:
         while len(lower) > 1 and not ccw(lower[-2], lower[-1], p):
