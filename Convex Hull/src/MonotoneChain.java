@@ -13,9 +13,38 @@ public class MonotoneChain {
         ArrayList<Point2D> lower = new ArrayList<Point2D>();
         ArrayList<Point2D> upper = new ArrayList<Point2D>();
         ListIterator<Point2D> i = points.listIterator();
+        Point2D p;
 
         while (i.hasNext()) {
+            p = i.next();
 
+            while (lower.size() > 1 && !ccw(lower.get(lower.size() - 2), lower.get(lower.size() - 1), p)) {
+                lower.remove(lower.size() - 1);
+            }
+
+            lower.add(p);
         }
+
+        while (i.hasPrevious()) {
+            p = i.previous();
+
+            while (upper.size() > 1 && !ccw(upper.get(upper.size() - 2), upper.get(upper.size() - 1), p)) {
+                upper.remove(upper.size() - 1);
+            }
+
+            lower.add(p);
+        }
+
+        if (lower.size() > 0) {
+            lower.remove(lower.size() - 1);
+        }
+
+        if (upper.size() > 0) {
+            upper.remove(upper.size() - 1);
+        }
+
+        lower.addAll(upper);
+
+        return lower;
     }
 }
