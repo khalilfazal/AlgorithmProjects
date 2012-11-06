@@ -32,18 +32,14 @@ public class MonotoneChain {
                 upper.remove(upper.size() - 1);
             }
 
-            lower.add(p);
+            upper.add(p);
         }
 
-        if (lower.size() > 0) {
-            lower.remove(lower.size() - 1);
-        }
-
-        if (upper.size() > 0) {
-            upper.remove(upper.size() - 1);
-        }
+        lower.remove(lower.size() - 1);
+        upper.remove(upper.size() - 1);
 
         lower.addAll(upper);
+        lower.add(lower.get(0));
 
         return lower;
     }
