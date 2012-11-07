@@ -6,17 +6,28 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class DrawPoints extends JPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8372619086334060399L;
-    ArrayList<Point2D> points;
+    ArrayList<Point2D> ipoints;
     ArrayList<Point2D> orpoints;
 
     public DrawPoints(ArrayList<Point2D> ipoints, ArrayList<Point2D> opoints) {
-        this.points = ipoints;
+        this.ipoints = ipoints;
         this.orpoints = opoints;
+    }
+
+    private void drawPoints(ArrayList<Point2D> lpoints, Graphics2D g2d, boolean line, boolean text) {
+        for (int i = 0; i < lpoints.size(); i++) {
+            g2d.drawLine((int) Math.round(lpoints.get(i).getX()), (int) Math.round(lpoints.get(i).getY()), (int) Math.round(lpoints.get(i).getX()), (int) Math.round(lpoints.get(i).getY()));
+            if (text) {
+                g2d.drawString("(" + i + ")" + (int) Math.round(lpoints.get(i).getX()) + "," + (int) Math.round(lpoints.get(i).getY()), (int) Math.round(lpoints.get(i).getX()), (int) Math.round(lpoints.get(i).getY() - 10));
+            }
+        }
+        if (line) {
+            for (int i = 0; i < lpoints.size() - 1; i++) {
+                g2d.drawLine((int) lpoints.get(i).getX(), (int) lpoints.get(i).getY(), (int) lpoints.get(i + 1).getX(), (int) lpoints.get(i + 1).getY());
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -24,19 +35,9 @@ public class DrawPoints extends JPanel {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setBackground(Color.white);
-        g2d.setColor(Color.blue);
-        for (int i = 0; i < orpoints.size(); i++) {
-            g2d.fillOval((int) Math.round(orpoints.get(i).getX() - 4), (int) Math.round(orpoints.get(i).getY() - 4), 8, 8);
-            //g2d.drawString("(" + i + ")" + (int) Math.round(orpoints.get(i).getX()) + "," + (int) Math.round(orpoints.get(i).getY()), (int) Math.round(orpoints.get(i).getX()), (int) Math.round(orpoints.get(i).getY()));
-        }
         g2d.setColor(Color.black);
-        for (int i = 0; i < points.size(); i++) {
-            g2d.fillOval((int) Math.round(points.get(i).getX() - 2.5), (int) Math.round(points.get(i).getY() - 2.5), 5, 5);
-            //g2d.drawString("(" + i + ")" + (int) Math.round(points.get(i).getX()) + "," + (int) Math.round(points.get(i).getY()), (int) Math.round(points.get(i).getX()), (int) Math.round(points.get(i).getY()));
-        }
-        for (int i = 0; i < points.size() - 1; i++) {
-            g2d.drawLine((int) points.get(i).getX(), (int) points.get(i).getY(), (int) points.get(i + 1).getX(), (int) points.get(i + 1).getY());
-        }
+        drawPoints(orpoints, g2d, false, false);
+        g2d.setColor(Color.blue);
+        drawPoints(ipoints, g2d, true, false);
     }
 }

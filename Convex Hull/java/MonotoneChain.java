@@ -4,8 +4,21 @@ import java.util.Collections;
 import java.util.ListIterator;
 
 public class MonotoneChain {
-    public static Boolean ccw(Point2D o, Point2D a, Point2D b) {
-        return (a.getX() - o.getX()) * (b.getY() - o.getY()) - (a.getY() - o.getY()) * (b.getX() - o.getX()) > 0;
+    private static Boolean ccw(Point2D o, Point2D a, Point2D b) {
+        double ax = a.getX() - o.getX();
+        double by = b.getY() - o.getY();
+        double ay = a.getY() - o.getY();
+        double bx = b.getX() - o.getX();
+        
+        return ax * by - ay * bx > 0;
+    }
+    
+    private static Point2D last(ArrayList<Point2D> array, int i) {
+        return array.get(array.size() - i);
+    }
+    
+    private static void pop(ArrayList<Point2D> array) {
+        array.remove(array.size() - 1);
     }
 
     public static ArrayList<Point2D> monotoneChain(ArrayList<Point2D> points) {
@@ -18,7 +31,7 @@ public class MonotoneChain {
         while (i.hasNext()) {
             p = i.next();
 
-            while (lower.size() > 1 && !ccw(lower.get(lower.size() - 2), lower.get(lower.size() - 1), p)) {
+            while (lower.size() > 1 && !ccw(last(lower, 2), last(lower, 1), p)) {
                 lower.remove(lower.size() - 1);
             }
 
@@ -28,16 +41,16 @@ public class MonotoneChain {
         while (i.hasPrevious()) {
             p = i.previous();
 
-            while (upper.size() > 1 && !ccw(upper.get(upper.size() - 2), upper.get(upper.size() - 1), p)) {
+            while (upper.size() > 1 && !ccw(last(upper, 2), last(upper, 1), p)) {
                 upper.remove(upper.size() - 1);
             }
 
             upper.add(p);
         }
 
-        lower.remove(lower.size() - 1);
-        upper.remove(upper.size() - 1);
-
+        pop(lower);
+        pop(upper);
+        
         lower.addAll(upper);
         lower.add(lower.get(0));
 
