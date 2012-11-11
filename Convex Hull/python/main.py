@@ -26,10 +26,6 @@ scatter(
 
 hull = monotoneChain(map(lambda (x, y): Point(x, y), points))
 
-# Connect the last point on the hull with the first point
-if len(hull) > 0:
-    hull = hull + [hull[0]]
-
 # Draw the hull
 plot(
     [h.x for h in hull],

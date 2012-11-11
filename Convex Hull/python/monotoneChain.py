@@ -10,17 +10,11 @@ def ccw (o, a, b):
 
 def monotoneChain(points):
     points = Point.sort(points)
-    lower = []
-    upper = []
+    hull = []
 
-    for p in points:
-        while len(lower) > 1 and not ccw(lower[-2], lower[-1], p):
-            lower.pop()
-        lower.append(p)
+    for p in points + points[::-1]:
+        while len(hull) > 1 and not ccw(hull[-2], hull[-1], p):
+            hull.pop()
+        hull.append(p)
 
-    for p in reversed(points):
-        while len(upper) > 1 and not ccw(upper[-2], upper[-1], p):
-            upper.pop()
-        upper.append(p)
-
-    return lower[:-1] + upper[:-1]
+    return hull
