@@ -12,6 +12,7 @@ import org.jfree.ui.ApplicationFrame;
 
 public class Chart extends ApplicationFrame {
     private static final long serialVersionUID = 5020487205158586593L;
+
     private final XYSeries series;
 
     public Chart(final String functionName) {
