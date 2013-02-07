@@ -1,4 +1,4 @@
-AlgorithmsProject
+AlgorithmProjects
 =================
 
-Algorithms Project
+Algorithm Projects
