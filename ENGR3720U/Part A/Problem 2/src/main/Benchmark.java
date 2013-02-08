@@ -55,6 +55,10 @@ public class Benchmark {
         return bests;
     }
 
+    public String getTitle() {
+        return this.functionName;
+    }
+
     public double[] getSample() {
         final double[] sample = new double[runs];
 
