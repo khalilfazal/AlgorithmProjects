@@ -11,15 +11,12 @@ import fitnessFunctions.FitnessFunction;
 public class Benchmark {
     private static final int runs = 50;
 
-    private final String functionName;
     private final Map<String, Object> params = new StringMap<Object>();
     private final int generations;
 
     private DifferentialEvolution population;
 
-    public Benchmark(final String functionName, final double lowerBound, final double upperBound, final FitnessFunction fitness) {
-        this.functionName = functionName;
-
+    public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
         final int n = 30;
 
         this.params.put("max", false);
@@ -32,6 +29,8 @@ public class Benchmark {
         this.params.put("upper", upperBound);
 
         this.generations = n * 1000;
+
+        this.reset();
     }
 
     private void reset() {
@@ -40,7 +39,6 @@ public class Benchmark {
 
     private double[] run() {
         final double[] bests = new double[this.generations];
-        this.reset();
 
         // final long startTime = System.nanoTime();
 
@@ -52,11 +50,13 @@ public class Benchmark {
         // System.out.println(this.population);
         // System.out.println(System.nanoTime() - startTime);
 
+        this.reset();
+
         return bests;
     }
 
     public String getTitle() {
-        return this.functionName;
+        return this.population.getFunctionName();
     }
 
     public double[] getSample() {
@@ -71,7 +71,7 @@ public class Benchmark {
     }
 
     public void viewPerformance() {
-        final Chart chart = new Chart(this.functionName);
+        final Chart chart = new Chart(this.getTitle());
 
         chart.setVisible(true);
         chart.pack();

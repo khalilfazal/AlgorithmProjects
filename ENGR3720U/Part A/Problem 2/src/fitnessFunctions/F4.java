@@ -1,6 +1,6 @@
 package fitnessFunctions;
 
-public class F4 implements FitnessFunction {
+public class F4 extends FitnessFunction {
     @Override
     public Double apply(final double[] parameters) {
         double sum = 0.0;
@@ -12,5 +12,10 @@ public class F4 implements FitnessFunction {
         }
 
         return sum;
+    }
+
+    @Override
+    public String toString() {
+        return "Rosenbrock's Valley";
     }
 }

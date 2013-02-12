@@ -1,6 +1,6 @@
 package fitnessFunctions;
 
-public class F3 implements FitnessFunction {
+public class F3 extends FitnessFunction {
     @Override
     public Double apply(final double[] parameters) {
         double sum = 0.0;
@@ -16,5 +16,10 @@ public class F3 implements FitnessFunction {
         }
 
         return sum;
+    }
+
+    @Override
+    public String toString() {
+        return "Schwefel's Problem 1.2";
     }
 }

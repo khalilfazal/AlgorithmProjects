@@ -18,11 +18,11 @@ public class Reporter {
     static {
         benchmarks = new Benchmark[n];
 
-        benchmarks[0] = new Benchmark("1st De Jong", -5.12, 5.12, new F1());
-        benchmarks[1] = new Benchmark("Axis Parallel Hyper-Ellipsoid", -5.12, 5.12, new F2());
-        benchmarks[2] = new Benchmark("Schwefel's Problem 1.2", -65, 65, new F3());
-        benchmarks[3] = new Benchmark("Rosenbrock's Valley", -2, 2, new F4());
-        benchmarks[4] = new Benchmark("Rastrigin's Function", -5.12, 5.12, new F5());
+        benchmarks[0] = new Benchmark(new F1(), -5.12, 5.12);
+        benchmarks[1] = new Benchmark(new F2(), -5.12, 5.12);
+        benchmarks[2] = new Benchmark(new F3(), -65, 65);
+        benchmarks[3] = new Benchmark(new F4(), -2, 2);
+        benchmarks[4] = new Benchmark(new F5(), -5.12, 5.12);
     }
 
     public static String createLine(final char separator, final int length) {
@@ -33,13 +33,13 @@ public class Reporter {
 
     private static int getSelection(final Scanner in, final int choices) {
         Integer selection = null;
-    
+
         while (selection == null) {
             System.out.print("Choose an option: ");
-    
+
             if (in.hasNextInt()) {
                 selection = in.nextInt();
-    
+
                 if (selection < 1 || selection > choices) {
                     System.err.println("Invalid selection.");
                     selection = null;
@@ -50,7 +50,7 @@ public class Reporter {
                 System.exit(0);
             }
         }
-    
+
         return selection;
     }
 

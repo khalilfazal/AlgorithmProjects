@@ -5,7 +5,7 @@ import fitnessFunctions.FitnessFunction;
 
 public class BenchmarkTester {
     public static void main(final String[] args) {
-        final Benchmark f1 = new Benchmark("1st De Jong", -5.12, 5.12, new FitnessFunction() {
+        final Benchmark f1 = new Benchmark(new FitnessFunction() {
             @Override
             public Double apply(final double[] parameters) {
                 double output = 0.0;
@@ -16,7 +16,12 @@ public class BenchmarkTester {
 
                 return output;
             }
-        });
+
+            @Override
+            public String toString() {
+                return "Sum of Series";
+            }
+        }, -5.12, 5.12);
 
         f1.viewPerformance();
     }

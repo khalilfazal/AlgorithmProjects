@@ -1,6 +1,6 @@
 package fitnessFunctions;
 
-public class F5 implements FitnessFunction {
+public class F5 extends FitnessFunction {
     @Override
     public Double apply(final double[] parameters) {
         double sum = 10 * parameters.length;
@@ -12,5 +12,10 @@ public class F5 implements FitnessFunction {
         }
 
         return sum;
+    }
+
+    @Override
+    public String toString() {
+        return "Rastrigin's Function";
     }
 }

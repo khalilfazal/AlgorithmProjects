@@ -70,7 +70,7 @@ public class DifferentialEvolution {
     private final double upperBound;
 
     // Objective function or fitness function
-    private final FitnessFunction fitness;
+    private final FitnessFunction function;
 
     // Population of possible solutions
     private final List<double[]> population;
@@ -93,7 +93,7 @@ public class DifferentialEvolution {
         this.lowerBound = castToDouble(params.get("lower"));
         this.upperBound = castToDouble(params.get("upper"));
 
-        this.fitness = (FitnessFunction) params.get("fitness");
+        this.function = (FitnessFunction) params.get("fitness");
 
         // Can not proceed if the population size is not >= 4.
         if (this.size < 4) {
@@ -146,7 +146,7 @@ public class DifferentialEvolution {
         this.fitnesses.clear();
 
         for (final double[] solution : this.population) {
-            this.fitnesses.add(this.fitness.apply(solution));
+            this.fitnesses.add(this.function.apply(solution));
         }
     }
 
@@ -335,7 +335,7 @@ public class DifferentialEvolution {
      * @return The chosen vector
      */
     private boolean selectShuffled(final double originalFitness, final double[] shuffled) {
-        final boolean condition = originalFitness > this.fitness.apply(shuffled);
+        final boolean condition = originalFitness > this.function.apply(shuffled);
 
         /*  condition | this.max | return
          * ===========+==========+========
@@ -393,5 +393,9 @@ public class DifferentialEvolution {
         }
 
         return output.toString();
+    }
+
+    public String getFunctionName() {
+        return this.function.toString();
     }
 }

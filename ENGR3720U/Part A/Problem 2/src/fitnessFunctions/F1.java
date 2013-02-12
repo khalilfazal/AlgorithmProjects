@@ -1,14 +1,19 @@
 package fitnessFunctions;
 
-public class F1 implements FitnessFunction {
+public class F1 extends FitnessFunction {
     @Override
-    public Double apply(final double[] parameters) {
+    public Double apply(final double[] population) {
         double sum = 0.0;
 
-        for (final double parameter : parameters) {
-            sum += Math.pow(parameter, 2);
+        for (final double element : population) {
+            sum += Math.pow(element, 2);
         }
 
         return sum;
+    }
+
+    @Override
+    public String toString() {
+        return "1st De Jong";
     }
 }

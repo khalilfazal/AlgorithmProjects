@@ -1,6 +1,6 @@
 package fitnessFunctions;
 
-public class F2 implements FitnessFunction {
+public class F2 extends FitnessFunction {
     @Override
     public Double apply(final double[] parameters) {
         double sum = 0.0;
@@ -10,5 +10,10 @@ public class F2 implements FitnessFunction {
         }
 
         return sum;
+    }
+
+    @Override
+    public String toString() {
+        return "Axis Parallel Hyper-Ellipsoid";
     }
 }
