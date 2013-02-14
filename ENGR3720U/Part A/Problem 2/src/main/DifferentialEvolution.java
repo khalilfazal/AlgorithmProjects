@@ -1,6 +1,5 @@
 package main;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,10 @@ import fitnessFunctions.FitnessFunction;
  */
 public class DifferentialEvolution {
     // A uniformly distributed random number generator
-    private static final Random generator = new SecureRandom();
+    // private static final Random generator = new SecureRandom();
+
+    // A faster but weaker random number generator
+    private static final Random generator = new Random();
 
     /**
      * Casts an object to a double Needed if the object is an instance of an

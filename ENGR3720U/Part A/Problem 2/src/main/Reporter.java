@@ -56,9 +56,14 @@ public class Reporter {
 
     public static void main(final String[] args) {
         System.out.println("1. Show the table displaying the results of running all benchmarks.");
-        System.out.println("\tMay take between 5 to 6.25 hours to complete.");
+
+        // System.out.println("\tMay take between 5 to 6.25 hours to complete.");
+        System.out.println("\tMay take between 22 to 34 minutes to complete.");
+
         System.out.println("2. Show a performance graph of a particular benchmark function.");
-        System.out.println("\tTakes around 1.5 minutes to complete.");
+
+        // System.out.println("\tTakes around 1.5 minutes to complete.");
+        System.out.println("\tTakes around 5 to 8 seconds to complete.");
 
         final Scanner in = new Scanner(System.in);
 
@@ -81,7 +86,8 @@ public class Reporter {
     }
 
     /**
-     * May take between 5.5 to 6.25 hours to complete.
+     * May take between 5.5 to 6.25 hours to complete with SecureRandom, 22 to
+     * 34 minutes with Random.
      */
     public static void showResults() {
         final StringBuilder output = new StringBuilder();
@@ -109,7 +115,8 @@ public class Reporter {
     }
 
     /**
-     * Takes around 1.5 minutes to complete.
+     * Takes around 1.5 minutes to complete with SecureRandom, 5 to 8 seconds
+     * with Random.
      * 
      * @param function
      */
