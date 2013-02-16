@@ -16,13 +16,13 @@ import fitnessFunctions.FitnessFunction;
 public class DifferentialEvolution {
     // A uniformly distributed random number generator
     // private static final Random generator = new SecureRandom();
-    
+
     // A faster but weaker random number generator
     private static final Random generator = new Random();
 
     /**
-     * Casts an object to a double.
-     * Needed if the object is an instance of an Integer.
+     * Casts an object to a double. Needed if the object is an instance of an
+     * Integer.
      * 
      * @param object
      *            the object that needs to be cast
@@ -94,8 +94,12 @@ public class DifferentialEvolution {
         this.crossover = castToDouble(params.get("crossover"));
         this.lowerBound = castToDouble(params.get("lower"));
         this.upperBound = castToDouble(params.get("upper"));
-
         this.function = (FitnessFunction) params.get("fitness");
+
+        // Can not proceed if the dimension is negative.
+        if (this.dimensions < 0) {
+            throw new IllegalArgumentException("Dimension must not be negative.");
+        }
 
         // Can not proceed if the population size is not >= 4.
         if (this.size < 4) {
@@ -118,11 +122,9 @@ public class DifferentialEvolution {
         }
 
         this.population = new ArrayList<double[]>();
-
         this.createInitial();
 
         this.fitnesses = new ArrayList<Double>();
-
         this.calculateFitnesses();
     }
 
@@ -183,22 +185,24 @@ public class DifferentialEvolution {
      * 
      * @return the best fitness value in the current generation
      */
-    public double bestFitnessValue() {
-        double best;
+    public Double bestFitnessValue() {
+        final List<Double> copy = new ArrayList<Double>(this.fitnesses);
 
-        if (this.max) {
-            best = Double.NEGATIVE_INFINITY;
+        if (copy.isEmpty()) {
+            return null;
         } else {
-            best = Double.POSITIVE_INFINITY;
-        }
+            Double best = copy.remove(0);
 
-        for (final double current : this.fitnesses) {
-            if (this.max == current > best) {
-                best = current;
+            while (!copy.isEmpty()) {
+                final double current = copy.remove(0);
+
+                if (this.max == current > best) {
+                    best = current;
+                }
             }
-        }
 
-        return best;
+            return best;
+        }
     }
 
     /**
@@ -312,8 +316,14 @@ public class DifferentialEvolution {
      * @return A new shuffled vector
      */
     private double[] crossOver(final double[] original, final double[] mutation2) {
-        final int randomIndex = generator.nextInt(this.dimensions);
         final double[] shuffled = new double[original.length];
+        final int randomIndex;
+
+        if (this.dimensions == 0) {
+            randomIndex = 0;
+        } else {
+            randomIndex = generator.nextInt(this.dimensions);
+        }
 
         for (int i = 0; i < this.dimensions; i++) {
             if (nextDoubleRange(0, 1) <= this.crossover || i == randomIndex) {
