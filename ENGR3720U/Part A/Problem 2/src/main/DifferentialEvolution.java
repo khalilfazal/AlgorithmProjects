@@ -216,6 +216,8 @@ public class DifferentialEvolution {
         final double[][] output = new double[3][this.dimensions];
         final List<double[]> copy = new ArrayList<double[]>(this.population);
 
+        copy.remove(ignore);
+
         for (int i = 0; i < output.length; i++) {
             final int index = generator.nextInt(copy.size());
             output[i] = copy.remove(index).clone();
