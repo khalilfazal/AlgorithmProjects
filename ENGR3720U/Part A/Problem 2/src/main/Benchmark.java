@@ -40,7 +40,7 @@ public class Benchmark {
     private double[] run() {
         final double[] bests = new double[this.generations];
 
-        final long startTime = System.nanoTime();
+        // final long startTime = System.nanoTime();
 
         for (int i = 0; i < this.generations - 1; i++) {
             bests[i] = this.population.bestFitnessValue();
@@ -48,7 +48,7 @@ public class Benchmark {
         }
 
         // System.out.println(this.population);
-        System.out.println(System.nanoTime() - startTime);
+        // System.out.println(System.nanoTime() - startTime);
 
         this.reset();
 
