@@ -9,7 +9,7 @@ import fitnessFunctions.FitnessFunction;
 
 /**
  * Models the differential evolution algorithm
- * 
+ *
  * @author Khalil Fazal
  * @studentNumber 100425046
  */
@@ -23,7 +23,7 @@ public class DifferentialEvolution {
     /**
      * Casts an object to a double. Needed if the object is an instance of an
      * Integer.
-     * 
+     *
      * @param object
      *            the object that needs to be cast
      * @return a casted double
@@ -38,7 +38,7 @@ public class DifferentialEvolution {
 
     /**
      * Generates a random double in a range
-     * 
+     *
      * @param low
      *            the range's lower bound
      * @param high
@@ -82,7 +82,7 @@ public class DifferentialEvolution {
 
     /**
      * Sets the settings for the algorithm and generates an initial population.
-     * 
+     *
      * @param params
      *            settings for the differential evolution algorithm
      */
@@ -182,7 +182,7 @@ public class DifferentialEvolution {
 
     /**
      * Calculates the best fitness value in the current generation.
-     * 
+     *
      * @return the best fitness value in the current generation
      */
     public Double bestFitnessValue() {
@@ -207,7 +207,7 @@ public class DifferentialEvolution {
 
     /**
      * Choose 3 distinct parents from the current population ignoring an index.
-     * 
+     *
      * @param ignore
      *            the index from population to ignore
      * @return 3 distinct parents
@@ -228,7 +228,7 @@ public class DifferentialEvolution {
 
     /**
      * Creates a mutated vector.
-     * 
+     *
      * @param randomParents
      *            From which a mutated vector is created
      * @return a mutated vector
@@ -240,26 +240,26 @@ public class DifferentialEvolution {
 
     /**
      * Enforces the lower and upper bounds of a solution's parameter
-     * 
-     * @param mutation2
+     *
+     * @param solution
      *            the vector whose bounds need to be checked
      * @return a vector whose bounds are checked
      */
-    private double[] enforceBounds(final double[] mutation2) {
-        for (int i = 0; i < mutation2.length; i++) {
-            if (mutation2[i] > this.upperBound) {
-                mutation2[i] = this.upperBound;
-            } else if (mutation2[i] < this.lowerBound) {
-                mutation2[i] = this.lowerBound;
+    private double[] enforceBounds(final double[] solution) {
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i] > this.upperBound) {
+                solution[i] = this.upperBound;
+            } else if (solution[i] < this.lowerBound) {
+                solution[i] = this.lowerBound;
             }
         }
 
-        return mutation2;
+        return solution;
     }
 
     /**
      * Finds the difference between two vectors.
-     * 
+     *
      * @param randomParents
      *            The first vector
      * @param randomParents2
@@ -276,7 +276,7 @@ public class DifferentialEvolution {
 
     /**
      * Amplifies the vector by the mutation factor.
-     * 
+     *
      * @param ds
      *            The vector which will be amplified
      * @return the amplified vector
@@ -291,7 +291,7 @@ public class DifferentialEvolution {
 
     /**
      * Finds the sum between two vectors.
-     * 
+     *
      * @param ds
      *            The first vector
      * @param randomParents
@@ -310,7 +310,7 @@ public class DifferentialEvolution {
      * Shuffles two competing vectors to generate new solutions and the increase
      * the diversity of the population. It is assured that the shuffled vector
      * contains at least one parameter from the mutated vector.
-     * 
+     *
      * @param original
      *            The original vector
      * @param mutation2
@@ -341,7 +341,7 @@ public class DifferentialEvolution {
     /**
      * Decides whether to select the shuffled vector for the next generation by
      * the fitness function.
-     * 
+     *
      * @param originalFitness
      *            The original vector's fitness
      * @param shuffled
@@ -368,7 +368,7 @@ public class DifferentialEvolution {
 
     /**
      * Shows a string representation of the current generation
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
