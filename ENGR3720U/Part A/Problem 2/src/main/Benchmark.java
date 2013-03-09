@@ -13,11 +13,11 @@ public class Benchmark {
 
     private final Map<String, Object> params = new StringMap<Object>();
     private final int generations;
-
-    private DifferentialEvolution population;
+    private final DifferentialEvolution population;
 
     public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
         final int n = 30;
+        this.generations = n * 1000;
 
         this.params.put("max", false);
         this.params.put("dimensions", n);
@@ -28,16 +28,12 @@ public class Benchmark {
         this.params.put("lower", lowerBound);
         this.params.put("upper", upperBound);
 
-        this.generations = n * 1000;
-    }
-
-    private void reset() {
         this.population = new DifferentialEvolution(this.params);
     }
 
     private double[] run() {
         final double[] bests = new double[this.generations];
-        this.reset();
+        this.population.reset();
 
         // final long startTime = System.nanoTime();
 

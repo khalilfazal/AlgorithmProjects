@@ -79,10 +79,10 @@ public class DifferentialEvolution {
     private final FitnessFunction function;
 
     // Population of possible solutions
-    private final List<double[]> population;
+    private List<double[]> population;
 
     // Fitness values for each solution in the population
-    private final List<Double> fitnesses;
+    private List<Double> fitnesses;
 
     /**
      * Sets the settings for the algorithm and generates an initial population.
@@ -125,11 +125,44 @@ public class DifferentialEvolution {
             throw new IllegalArgumentException("The lower bound must be less than the upper bound.");
         }
 
-        this.population = new ArrayList<double[]>();
-        this.createInitial();
+        this.reset();
+    }
 
-        this.fitnesses = new ArrayList<Double>();
+    public void reset() {
+        this.createInitial();
         this.calculateFitnesses();
+    }
+
+    /**
+     * Generates the initial random population which is uniformly distributed.
+     */
+    private void createInitial() {
+        this.population = new ArrayList<double[]>();
+    
+        for (int i = 0; i < this.size; i++) {
+            final double[] individual = new double[this.dimensions];
+    
+            for (int j = 0; j < this.dimensions; j++) {
+                individual[j] = nextDoubleRange(this.lowerBound, this.upperBound);
+            }
+    
+            this.population.add(individual);
+        }
+    }
+
+    /**
+     * Calculates the fitness values for each solution in the population
+     */
+    private void calculateFitnesses() {
+        if (this.fitnesses == null) {
+            this.fitnesses = new ArrayList<Double>();
+        } else {
+            this.fitnesses.clear();
+        }
+    
+        for (final double[] solution : this.population) {
+            this.fitnesses.add(this.function.apply(solution));
+        }
     }
 
     /**
@@ -137,22 +170,22 @@ public class DifferentialEvolution {
      */
     public void repopulate() {
         final List<double[]> nextGen = new ArrayList<double[]>();
-
+    
         for (int i = 0; i < this.size; i++) {
             final double[] original = this.population.get(i);
             final double originalFitness = this.fitnesses.get(i);
-
+    
             final double[][] randomParents = this.distinct(i);
             final double[] mutation = this.mutate(randomParents);
             final double[] crossOver = this.crossOver(original, mutation);
-
+    
             if (this.selectShuffled(originalFitness, crossOver)) {
                 nextGen.add(crossOver);
             } else {
                 nextGen.add(original);
             }
         }
-
+    
         this.population.clear();
         this.population.addAll(nextGen);
         this.calculateFitnesses();
@@ -164,49 +197,19 @@ public class DifferentialEvolution {
      * @return the best fitness value in the current generation
      */
     public Double bestFitnessValue() {
-        final List<Double> copy = new ArrayList<Double>(this.fitnesses);
-
-        if (copy.isEmpty()) {
-            return null;
-        } else {
-            Double best = copy.remove(0);
-
-            while (!copy.isEmpty()) {
-                final double current = copy.remove(0);
-
-                if (this.max == current > best) {
-                    best = current;
-                }
+        Double best = null;
+    
+        for (final Double fitness : this.fitnesses) {
+            if (best == null || this.max == fitness > best) {
+                best = fitness;
             }
-
-            return best;
         }
+    
+        return best;
     }
 
-    /**
-     * Generates the initial random population which is uniformly distributed.
-     */
-    private void createInitial() {
-        for (int i = 0; i < this.size; i++) {
-            final double[] individual = new double[this.dimensions];
-
-            for (int j = 0; j < this.dimensions; j++) {
-                individual[j] = nextDoubleRange(this.lowerBound, this.upperBound);
-            }
-
-            this.population.add(individual);
-        }
-    }
-
-    /**
-     * Calculates the fitness values for each solution in the population
-     */
-    private void calculateFitnesses() {
-        this.fitnesses.clear();
-
-        for (final double[] solution : this.population) {
-            this.fitnesses.add(this.function.apply(solution));
-        }
+    public String getFunctionName() {
+        return this.function.toString();
     }
 
     /**
@@ -219,14 +222,14 @@ public class DifferentialEvolution {
     private double[][] distinct(final int ignore) {
         final double[][] output = new double[3][this.dimensions];
         final List<double[]> copy = new ArrayList<double[]>(this.population);
-
+    
         copy.remove(ignore);
-
+    
         for (int i = 0; i < output.length; i++) {
             final int index = generator.nextInt(copy.size());
             output[i] = copy.remove(index).clone();
         }
-
+    
         return output;
     }
 
@@ -240,6 +243,55 @@ public class DifferentialEvolution {
     private double[] mutate(final double[][] randomParents) {
         final double[] mutation = this.add(this.weigh(this.difference(randomParents[0], randomParents[1])), randomParents[2]);
         return this.enforceBounds(mutation);
+    }
+
+    /**
+     * Finds the sum between two vectors.
+     * 
+     * @param ds
+     *            The first vector
+     * @param randomParents
+     *            The second vector
+     * @return The sum
+     */
+    private double[] add(final double[] ds, final double[] randomParents) {
+        for (int i = 0; i < this.dimensions; i++) {
+            ds[i] += randomParents[i];
+        }
+    
+        return ds;
+    }
+
+    /**
+     * Amplifies the vector by the mutation factor.
+     * 
+     * @param ds
+     *            The vector which will be amplified
+     * @return the amplified vector
+     */
+    private double[] weigh(final double[] ds) {
+        for (int i = 0; i < this.dimensions; i++) {
+            ds[i] *= this.mutation;
+        }
+    
+        return ds;
+    }
+
+    /**
+     * Finds the difference between two vectors.
+     * 
+     * @param randomParents
+     *            The first vector
+     * @param randomParents2
+     *            The second vector
+     * @return The difference
+     */
+    private double[] difference(final double[] randomParents, final double[] randomParents2) {
+        for (int i = 0; i < this.dimensions; i++) {
+            randomParents[i] -= randomParents2[i];
+        }
+    
+        return randomParents;
     }
 
     /**
@@ -257,57 +309,8 @@ public class DifferentialEvolution {
                 solution[i] = this.lowerBound;
             }
         }
-
+    
         return solution;
-    }
-
-    /**
-     * Finds the difference between two vectors.
-     * 
-     * @param randomParents
-     *            The first vector
-     * @param randomParents2
-     *            The second vector
-     * @return The difference
-     */
-    private double[] difference(final double[] randomParents, final double[] randomParents2) {
-        for (int i = 0; i < this.dimensions; i++) {
-            randomParents[i] -= randomParents2[i];
-        }
-
-        return randomParents;
-    }
-
-    /**
-     * Amplifies the vector by the mutation factor.
-     * 
-     * @param ds
-     *            The vector which will be amplified
-     * @return the amplified vector
-     */
-    private double[] weigh(final double[] ds) {
-        for (int i = 0; i < this.dimensions; i++) {
-            ds[i] *= this.mutation;
-        }
-
-        return ds;
-    }
-
-    /**
-     * Finds the sum between two vectors.
-     * 
-     * @param ds
-     *            The first vector
-     * @param randomParents
-     *            The second vector
-     * @return The sum
-     */
-    private double[] add(final double[] ds, final double[] randomParents) {
-        for (int i = 0; i < this.dimensions; i++) {
-            ds[i] += randomParents[i];
-        }
-
-        return ds;
     }
 
     /**
@@ -324,13 +327,13 @@ public class DifferentialEvolution {
     private double[] crossOver(final double[] original, final double[] mutation2) {
         final double[] shuffled = new double[original.length];
         final int randomIndex;
-
+    
         if (this.dimensions == 0) {
             randomIndex = 0;
         } else {
             randomIndex = generator.nextInt(this.dimensions);
         }
-
+    
         for (int i = 0; i < this.dimensions; i++) {
             if (nextDoubleRange(0, 1) <= this.crossover || i == randomIndex) {
                 shuffled[i] = mutation2[i];
@@ -338,7 +341,7 @@ public class DifferentialEvolution {
                 shuffled[i] = original[i];
             }
         }
-
+    
         return shuffled;
     }
 
@@ -354,7 +357,7 @@ public class DifferentialEvolution {
      */
     private boolean selectShuffled(final double originalFitness, final double[] shuffled) {
         final boolean condition = originalFitness > this.function.apply(shuffled);
-
+    
         /*  condition | this.max | return
          * ===========+==========+========
          *    false   |   false  | false
@@ -366,12 +369,8 @@ public class DifferentialEvolution {
          *    true    |   true   | false
          * -----------+----------+--------
          */
-
+    
         return condition != this.max;
-    }
-
-    public String getFunctionName() {
-        return this.function.toString();
     }
 
     /**
