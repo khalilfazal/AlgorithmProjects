@@ -29,8 +29,6 @@ public class Benchmark {
         this.params.put("upper", upperBound);
 
         this.generations = n * 1000;
-
-        this.reset();
     }
 
     private void reset() {
@@ -39,6 +37,7 @@ public class Benchmark {
 
     private double[] run() {
         final double[] bests = new double[this.generations];
+        this.reset();
 
         // final long startTime = System.nanoTime();
 
@@ -50,8 +49,6 @@ public class Benchmark {
         // System.out.println(this.population);
         // System.out.println(System.nanoTime() - startTime);
 
-        this.reset();
-
         return bests;
     }
 
@@ -62,7 +59,7 @@ public class Benchmark {
     public double[] getSample() {
         final double[] sample = new double[runs];
 
-        for (int i = 0; i < runs; i++) {
+        for (int i = 0; i < sample.length; i++) {
             this.run();
             sample[i] = this.population.bestFitnessValue();
         }

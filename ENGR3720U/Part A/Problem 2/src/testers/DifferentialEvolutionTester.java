@@ -7,6 +7,7 @@ import main.DifferentialEvolution;
 import com.google.common.base.Function;
 import com.google.gson.internal.StringMap;
 
+@Deprecated
 public class DifferentialEvolutionTester {
     public static void main(final String[] args) {
         final Map<String, Object> params = new StringMap<Object>();

@@ -12,18 +12,13 @@ import fitnessFunctions.F4;
 import fitnessFunctions.F5;
 
 public class Reporter {
-    private static final int n = 5;
-    private static final Benchmark[] benchmarks;
-
-    static {
-        benchmarks = new Benchmark[n];
-
-        benchmarks[0] = new Benchmark(new F1(), -5.12, 5.12);
-        benchmarks[1] = new Benchmark(new F2(), -5.12, 5.12);
-        benchmarks[2] = new Benchmark(new F3(), -65, 65);
-        benchmarks[3] = new Benchmark(new F4(), -2, 2);
-        benchmarks[4] = new Benchmark(new F5(), -5.12, 5.12);
-    }
+    private static final Benchmark[] benchmarks = new Benchmark[] {
+            new Benchmark(new F1(), -5.12, 5.12),
+            new Benchmark(new F2(), -5.12, 5.12),
+            new Benchmark(new F3(), -65, 65),
+            new Benchmark(new F4(), -2, 2),
+            new Benchmark(new F5(), -5.12, 5.12)
+    };
 
     public static String createLine(final char separator, final int length) {
         final char[] line = new char[length];
@@ -78,7 +73,7 @@ public class Reporter {
                     System.out.println(String.format("%d. %s", i + 1, benchmarks[i].getTitle()));
                 }
 
-                viewPerformance(getSelection(in, n) - 1);
+                viewPerformance(getSelection(in, benchmarks.length) - 1);
                 break;
         }
 
@@ -99,7 +94,7 @@ public class Reporter {
 
         // final long startTime = System.nanoTime();
 
-        for (int i = 1; i <= benchmarks.length; i++) {
+        for (int i = 0; i < benchmarks.length; i++) {
             final double[] sample = benchmarks[i].getSample();
             final double mean = Mean.arithmeticMean(sample);
             final double stddev = Variance.sampleStandardDeviation(sample);

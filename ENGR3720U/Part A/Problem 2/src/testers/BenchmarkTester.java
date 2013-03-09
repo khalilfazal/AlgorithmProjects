@@ -3,6 +3,7 @@ package testers;
 import main.Benchmark;
 import fitnessFunctions.FitnessFunction;
 
+@Deprecated
 public class BenchmarkTester {
     public static void main(final String[] args) {
         final Benchmark f1 = new Benchmark(new FitnessFunction() {
