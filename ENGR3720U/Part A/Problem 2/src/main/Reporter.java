@@ -88,18 +88,19 @@ public class Reporter {
         final StringBuilder output = new StringBuilder();
         final int lineLength = 78;
 
+        output.append("\n");
         output.append("Benchmark Function | Mean Fitness Value | Standard Deviation of Fitness Values\n");
         output.append(createLine('=', lineLength));
         output.append("\n");
 
         // final long startTime = System.nanoTime();
 
-        for (int i = 0; i < benchmarks.length; i++) {
-            final double[] sample = benchmarks[i].getSample();
+        for (final Benchmark benchmark : benchmarks) {
+            final double[] sample = benchmark.getSample();
             final double mean = Mean.arithmeticMean(sample);
             final double stddev = Variance.sampleStandardDeviation(sample);
 
-            output.append(String.format("%17s%1d | %18.2f | %36.2f\n", "f", i, mean, stddev));
+            output.append(String.format("%18s | %18.2f | %36.2f\n", benchmark.getShortTitle(), mean, stddev));
             output.append(createLine('-', lineLength));
             output.append("\n");
         }

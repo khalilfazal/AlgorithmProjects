@@ -11,24 +11,26 @@ import fitnessFunctions.FitnessFunction;
 public class Benchmark {
     private static final int runs = 50;
 
-    private final Map<String, Object> params = new StringMap<Object>();
     private final int generations;
     private final DifferentialEvolution population;
+    private final String sortTitle;
 
     public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
         final int n = 30;
+
+        final Map<String, Object> params = new StringMap<Object>();
+        params.put("max", false);
+        params.put("dimensions", n);
+        params.put("size", n * 2);
+        params.put("mutation", 0.5);
+        params.put("crossover", 0.9);
+        params.put("fitness", fitness);
+        params.put("lower", lowerBound);
+        params.put("upper", upperBound);
+
         this.generations = n * 1000;
-
-        this.params.put("max", false);
-        this.params.put("dimensions", n);
-        this.params.put("size", n * 2);
-        this.params.put("mutation", 0.5);
-        this.params.put("crossover", 0.9);
-        this.params.put("fitness", fitness);
-        this.params.put("lower", lowerBound);
-        this.params.put("upper", upperBound);
-
-        this.population = new DifferentialEvolution(this.params);
+        this.population = new DifferentialEvolution(params);
+        this.sortTitle = fitness.getClass().getSimpleName();
     }
 
     private double[] run() {
@@ -72,5 +74,9 @@ public class Benchmark {
         chart.pack();
 
         RefineryUtilities.centerFrameOnScreen(chart);
+    }
+
+    public Object getShortTitle() {
+        return this.sortTitle;
     }
 }

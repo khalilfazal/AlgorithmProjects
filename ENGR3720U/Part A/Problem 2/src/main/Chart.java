@@ -29,9 +29,9 @@ public class Chart extends ApplicationFrame {
         this.setContentPane(panel);
     }
 
-    public void show(final double[] ds) {
-        for (int i = 0; i < ds.length; i++) {
-            this.series.add(i, ds[i]);
+    public void show(final double[] data) {
+        for (int i = 0; i < data.length; i++) {
+            this.series.add(i, data[i]);
         }
     }
 }
