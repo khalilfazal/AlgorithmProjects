@@ -1,6 +1,6 @@
 package main;
 
-import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,17 +21,29 @@ public class Chart extends ApplicationFrame {
         this.series = new XYSeries("");
 
         final XYSeriesCollection data = new XYSeriesCollection(this.series);
-        final JFreeChart chart = ChartFactory.createXYLineChart(functionName, "Generation", "Best fitness value so far", data, PlotOrientation.VERTICAL, false, true, false);
-        chart.getXYPlot().getDomainAxis().setRange(0, 100);
+
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+                functionName,
+                "Generation",
+                "Best fitness value so far (log scale)",
+                data,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
 
         final ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(new Dimension(1600, 900));
+        panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.setContentPane(panel);
     }
 
     public void show(final double[] data) {
         for (int i = 0; i < data.length; i++) {
-            this.series.add(i, data[i]);
+            if (data[i] == 0) {
+                data[i] = data[i - 1];
+            }
+
+            this.series.add(i, Math.log(data[i]));
         }
     }
 }
