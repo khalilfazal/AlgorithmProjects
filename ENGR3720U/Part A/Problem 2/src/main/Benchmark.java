@@ -76,7 +76,7 @@ public class Benchmark {
         RefineryUtilities.centerFrameOnScreen(chart);
     }
 
-    public Object getShortTitle() {
+    public String getShortTitle() {
         return this.sortTitle;
     }
 }
