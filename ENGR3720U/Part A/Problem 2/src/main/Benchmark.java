@@ -16,7 +16,7 @@ public class Benchmark {
     private final String sortTitle;
 
     public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
-        final int n = 40;
+        final int n = 30;
 
         final Map<String, Object> params = new StringMap<Object>();
         params.put("max", false);
