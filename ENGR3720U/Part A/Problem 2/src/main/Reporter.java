@@ -3,8 +3,8 @@ package main;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import jstats.Mean;
-import jstats.Variance;
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+
 import fitnessFunctions.F1;
 import fitnessFunctions.F2;
 import fitnessFunctions.F3;
@@ -96,9 +96,10 @@ public class Reporter {
         // final long startTime = System.nanoTime();
 
         for (final Benchmark benchmark : benchmarks) {
-            final double[] sample = benchmark.getSample();
-            final double mean = Mean.arithmeticMean(sample);
-            final double stddev = Variance.sampleStandardDeviation(sample);
+            final SummaryStatistics sample = benchmark.getSample();
+
+            final double mean = sample.getMean();
+            final double stddev = sample.getStandardDeviation();
 
             output.append(String.format("%18s | %18.2f | %36.2f\n", benchmark.getShortTitle(), mean, stddev));
             output.append(createLine('-', lineLength));

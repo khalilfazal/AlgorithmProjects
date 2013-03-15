@@ -2,6 +2,7 @@ package main;
 
 import java.util.Map;
 
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 import org.jfree.ui.RefineryUtilities;
 
 import com.google.gson.internal.StringMap;
@@ -54,12 +55,12 @@ public class Benchmark {
         return this.population.getFunctionName();
     }
 
-    public double[] getSample() {
-        final double[] sample = new double[runs];
+    public SummaryStatistics getSample() {
+        final SummaryStatistics sample = new SummaryStatistics();
 
-        for (int i = 0; i < sample.length; i++) {
+        for (int i = 0; i < runs; i++) {
             this.run();
-            sample[i] = this.population.bestFitnessValue();
+            sample.addValue(this.population.bestFitnessValue());
         }
 
         return sample;
