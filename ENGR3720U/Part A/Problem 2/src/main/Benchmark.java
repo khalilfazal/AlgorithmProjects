@@ -13,7 +13,7 @@ public class Benchmark {
     private static final int runs = 50;
 
     private final int generations;
-    private final DifferentialEvolution population;
+    private final DifferentialEvolution evolutionaryMechanism;
     private final String sortTitle;
 
     public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
@@ -30,19 +30,19 @@ public class Benchmark {
         params.put("upper", upperBound);
 
         this.generations = n * 1000;
-        this.population = new DifferentialEvolution(params);
+        this.evolutionaryMechanism = new DifferentialEvolution(params);
         this.sortTitle = fitness.getClass().getSimpleName();
     }
 
     private double[] run() {
         final double[] bests = new double[this.generations];
-        this.population.reset();
+        this.evolutionaryMechanism.reset();
 
         // final long startTime = System.nanoTime();
 
         for (int i = 0; i < this.generations; i++) {
-            this.population.repopulate();
-            bests[i] = this.population.bestFitnessValue();
+            this.evolutionaryMechanism.repopulate();
+            bests[i] = this.evolutionaryMechanism.bestFitnessValue();
         }
 
         // System.out.println(this.population);
@@ -52,7 +52,7 @@ public class Benchmark {
     }
 
     public String getTitle() {
-        return this.population.getFunctionName();
+        return this.evolutionaryMechanism.getFunctionName();
     }
 
     public SummaryStatistics getSample() {
@@ -60,7 +60,7 @@ public class Benchmark {
 
         for (int i = 0; i < runs; i++) {
             this.run();
-            sample.addValue(this.population.bestFitnessValue());
+            sample.addValue(this.evolutionaryMechanism.bestFitnessValue());
         }
 
         return sample;
