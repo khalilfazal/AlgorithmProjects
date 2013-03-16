@@ -40,9 +40,9 @@ public class Benchmark {
 
         // final long startTime = System.nanoTime();
 
-        for (int i = 0; i < this.generations - 1; i++) {
-            bests[i] = this.population.bestFitnessValue();
+        for (int i = 0; i < this.generations; i++) {
             this.population.repopulate();
+            bests[i] = this.population.bestFitnessValue();
         }
 
         // System.out.println(this.population);
