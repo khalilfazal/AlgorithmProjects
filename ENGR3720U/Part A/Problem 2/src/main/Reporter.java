@@ -89,24 +89,34 @@ public class Reporter {
             }
         }
 
-        while (selection == null) {
+        do {
             System.out.print("Choose an option: ");
 
             if (in.hasNextInt()) {
                 selection = in.nextInt();
 
-                if (selection < 1 || selection > choices) {
+                if (selection == null || selection < 1 || selection > choices) {
                     System.err.println("Invalid selection.");
                     selection = null;
+                } else {
+                    return selection;
                 }
             } else {
-                in.close();
-                System.out.println();
-                System.exit(0);
+                if (in.hasNextLine()) {
+                    System.err.println("Invalid selection.");
+                    in.nextLine();
+                } else {
+                    in.close();
+                    System.exit(0);
+                }
             }
-        }
+        } while (selection == null);
 
-        return selection;
+        // Unreachable ?
+        in.close();
+        System.exit(0);
+
+        return 0;
     }
 
     /**
