@@ -25,6 +25,7 @@ import fitnessFunctions.FitnessFunction;
  * @studentNumber 100252234
  */
 public class Benchmark {
+
     /**
      * The amount of runs to perform while generating a sample
      */
@@ -86,10 +87,8 @@ public class Benchmark {
 
     /**
      * Performs one (1) run of the {@link DifferentialEvolution} mechanism
-     * 
-     * @return The best fitness values of each generation
      */
-    private BlockingDeque<Double> run() {
+    private void run() {
         this.evolutionaryMechanism.reset();
 
         // final long startTime = System.nanoTime();
@@ -100,13 +99,12 @@ public class Benchmark {
             try {
                 this.bests.put(this.evolutionaryMechanism.bestFitnessValue());
             } catch (final InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
         // System.out.println(this.population);
         // System.out.println(System.nanoTime() - startTime);
-
-        return this.bests;
     }
 
     /**
@@ -126,7 +124,9 @@ public class Benchmark {
         final SummaryStatistics sample = new SummaryStatistics();
 
         for (int i = 0; i < this.runs; i++) {
-            sample.addValue(this.run().getLast());
+            this.run();
+            sample.addValue(this.bests.getLast());
+            this.bests.clear();
         }
 
         return sample;
@@ -156,14 +156,9 @@ public class Benchmark {
     public void viewPerformance(final boolean logScale) {
         final EvolutionaryGraph graph = new EvolutionaryGraph(this.getTitle(), this.bests, logScale);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Benchmark.this.run();
-            }
-        }).start();
-
         new Thread(graph).start();
+
+        this.run();
     }
 
     /**

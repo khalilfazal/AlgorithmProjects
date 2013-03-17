@@ -30,6 +30,7 @@ import org.jfree.ui.RefineryUtilities;
  * @studentNumber 100252234
  */
 public class EvolutionaryGraph extends ApplicationFrame implements Runnable {
+
     /**
      * A uniquely-generated serial UID
      */
@@ -44,6 +45,12 @@ public class EvolutionaryGraph extends ApplicationFrame implements Runnable {
      * A reference from where data will be listened from
      */
     private final BlockingDeque<Double> dataQueue;
+
+    /**
+     * The total amount of data that will be eventually be sent through the
+     * queue
+     */
+    private final int capacity;
 
     /**
      * Set's up an empty graph.
@@ -89,6 +96,7 @@ public class EvolutionaryGraph extends ApplicationFrame implements Runnable {
         this.setContentPane(panel);
 
         this.dataQueue = dataQueue;
+        this.capacity = dataQueue.remainingCapacity();
         this.setVisible(true);
         this.pack();
     }
@@ -104,11 +112,9 @@ public class EvolutionaryGraph extends ApplicationFrame implements Runnable {
      */
     @Override
     public void run() {
-        int i = 0;
-
         try {
-            while (this.dataQueue.remainingCapacity() > 0) {
-                this.series.add(i++, this.dataQueue.take());
+            for (int i = 0; i < this.capacity; i++) {
+                this.series.add(i, this.dataQueue.take());
             }
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
