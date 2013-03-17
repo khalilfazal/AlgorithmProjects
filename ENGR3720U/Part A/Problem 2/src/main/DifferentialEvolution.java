@@ -137,7 +137,7 @@ public class DifferentialEvolution {
      * Generates the initial random population which is uniformly distributed.
      */
     private void createInitial() {
-        this.population = new ArrayList<double[]>();
+        this.population = new ArrayList<double[]>(this.size);
 
         for (int i = 0; i < this.size; i++) {
             final double[] individual = new double[this.dimensions];
@@ -155,13 +155,13 @@ public class DifferentialEvolution {
      */
     private void calculateFitnesses() {
         if (this.fitnesses == null) {
-            this.fitnesses = new ArrayList<Double>();
+            this.fitnesses = new ArrayList<Double>(this.size);
         } else {
             this.fitnesses.clear();
         }
 
-        for (final double[] solution : this.population) {
-            this.fitnesses.add(this.function.apply(solution));
+        for (final double[] individual : this.population) {
+            this.fitnesses.add(this.function.apply(individual));
         }
     }
 
@@ -169,7 +169,7 @@ public class DifferentialEvolution {
      * Generates the next population.
      */
     public void repopulate() {
-        final List<double[]> nextGen = new ArrayList<double[]>();
+        final List<double[]> nextGen = new ArrayList<double[]>(this.size);
 
         for (int i = 0; i < this.size; i++) {
             final double[] original = this.population.get(i);
@@ -179,11 +179,7 @@ public class DifferentialEvolution {
             final double[] mutation = this.mutate(randomParents);
             final double[] crossOver = this.crossOver(original, mutation);
 
-            if (this.selectShuffled(originalFitness, crossOver)) {
-                nextGen.add(crossOver);
-            } else {
-                nextGen.add(original);
-            }
+            nextGen.add(this.selectShuffled(originalFitness, crossOver) ? crossOver : original);
         }
 
         this.population.clear();
@@ -216,7 +212,7 @@ public class DifferentialEvolution {
      * Choose 3 distinct parents from the current population ignoring an index.
      * 
      * @param ignore
-     *            the index from population to ignore
+     *            the index from the population to ignore
      * @return 3 distinct parents
      */
     private double[][] distinct(final int ignore) {
@@ -241,8 +237,11 @@ public class DifferentialEvolution {
      * @return a mutated vector
      */
     private double[] mutate(final double[][] randomParents) {
-        final double[] mutation = this.add(this.weigh(this.difference(randomParents[0], randomParents[1])), randomParents[2]);
-        return this.enforceBounds(mutation);
+        final double[] subtracted = this.difference(randomParents[0], randomParents[1]);
+        final double[] weighed = this.weigh(subtracted);
+        final double[] summed = this.add(weighed, randomParents[2]);
+
+        return this.enforceBounds(summed);
     }
 
     /**
@@ -326,13 +325,7 @@ public class DifferentialEvolution {
      */
     private double[] crossOver(final double[] original, final double[] mutated) {
         final double[] shuffled = new double[original.length];
-        final int randomIndex;
-
-        if (this.dimensions == 0) {
-            randomIndex = 0;
-        } else {
-            randomIndex = generator.nextInt(this.dimensions);
-        }
+        final int randomIndex = this.dimensions == 0 ? 0 : generator.nextInt(this.dimensions);
 
         for (int i = 0; i < this.dimensions; i++) {
             if (nextDoubleRange(0, 1) <= this.crossover || i == randomIndex) {
@@ -353,7 +346,7 @@ public class DifferentialEvolution {
      *            The original vector's fitness
      * @param shuffled
      *            The shuffled vector
-     * @return The chosen vector
+     * @return whether to select the shuffled vector
      */
     private boolean selectShuffled(final double originalFitness, final double[] shuffled) {
         final boolean condition = originalFitness > this.function.apply(shuffled);

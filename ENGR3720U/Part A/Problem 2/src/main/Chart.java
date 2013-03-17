@@ -16,17 +16,19 @@ public class Chart extends ApplicationFrame {
 
     private final XYSeries series;
 
-    public Chart(final String functionName) {
+    public Chart(final String functionName, final boolean setLog) {
         super(functionName);
 
         this.series = new XYSeries("");
 
         final XYSeriesCollection data = new XYSeriesCollection(this.series);
 
+        final String yLabel = setLog ? null : "Best Fitness Value So Far";
+
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 functionName,
                 "Generation",
-                null,
+                yLabel,
                 data,
                 PlotOrientation.VERTICAL,
                 false,
@@ -34,11 +36,13 @@ public class Chart extends ApplicationFrame {
                 false);
 
         // Set Logarithmic Y-Axis
-        final LogAxis log = new LogAxis("Best Fitness Value So Far (log10 scale)");
-        log.setAutoRangeMinimumSize(Double.MIN_VALUE);
-        log.setSmallestValue(Double.MIN_NORMAL);
+        if (setLog) {
+            final LogAxis log = new LogAxis("Best Fitness Value So Far (log10 scale)");
+            log.setAutoRangeMinimumSize(Double.MIN_VALUE);
+            log.setSmallestValue(Double.MIN_NORMAL);
 
-        chart.getXYPlot().setRangeAxis(log);
+            chart.getXYPlot().setRangeAxis(log);
+        }
 
         final ChartPanel panel = new ChartPanel(chart);
         panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());

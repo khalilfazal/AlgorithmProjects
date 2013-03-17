@@ -24,6 +24,6 @@ public class BenchmarkTester {
             }
         }, -5.12, 5.12);
 
-        f1.viewPerformance();
+        f1.viewPerformance(true);
     }
 }

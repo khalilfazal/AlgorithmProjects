@@ -12,6 +12,8 @@ import fitnessFunctions.F4;
 import fitnessFunctions.F5;
 
 public class Reporter {
+    private static final String TAB = "   ";
+
     private static final Benchmark[] benchmarks = new Benchmark[] {
             new Benchmark(new F1(), -5.12, 5.12),
             new Benchmark(new F2(), -5.12, 5.12),
@@ -51,14 +53,9 @@ public class Reporter {
 
     public static void main(final String[] args) {
         System.out.println("1. Show the table displaying the results of running all benchmarks.");
-
-        // System.out.println("\tMay take between 5 to 6.25 hours to complete.");
-        System.out.println("\tMay take between 22 to 34 minutes to complete.");
-
+        System.out.printf("%sMay take between 22 to 34 minutes to complete.\n", TAB);
         System.out.println("2. Show a performance graph of a particular benchmark function.");
-
-        // System.out.println("\tTakes around 1.5 minutes to complete.");
-        System.out.println("\tTakes around 5 to 8 seconds to complete.");
+        System.out.printf("%sTakes around 5 to 8 seconds to complete.\n", TAB);
 
         final Scanner in = new Scanner(System.in);
 
@@ -67,13 +64,27 @@ public class Reporter {
                 showResults();
                 break;
             case 2:
-                System.out.println();
+                System.out.println("\nAvailable Functions:");
 
                 for (int i = 0; i < benchmarks.length; i++) {
-                    System.out.println(String.format("%d. %s", i + 1, benchmarks[i].getTitle()));
+                    System.out.printf("%s%d. %s\n", TAB, i + 1, benchmarks[i].getTitle());
                 }
 
-                viewPerformance(getSelection(in, benchmarks.length) - 1);
+                // viewPerformance(getSelection(in, benchmarks.length) - 1);
+                final int function = getSelection(in, benchmarks.length) - 1;
+
+                System.out.println("\nAvailable Scales for the Y-Axis:");
+                System.out.printf("%s1. Linear\n", TAB);
+                System.out.printf("%s2. Logarithmic\n", TAB);
+
+                switch (getSelection(in, 2)) {
+                    case 1:
+                        viewPerformance(function, false);
+                        break;
+                    case 2:
+                        viewPerformance(function, true);
+                }
+
                 break;
         }
 
@@ -117,7 +128,7 @@ public class Reporter {
      * 
      * @param function
      */
-    public static void viewPerformance(final int function) {
-        benchmarks[function].viewPerformance();
+    public static void viewPerformance(final int function, final boolean logScale) {
+        benchmarks[function].viewPerformance(logScale);
     }
 }

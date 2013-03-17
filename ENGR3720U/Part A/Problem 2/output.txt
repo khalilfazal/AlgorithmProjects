@@ -1,9 +1,8 @@
 1. Show the table displaying the results of running all benchmarks.
-    May take between 22 to 34 minutes to complete.
+   May take between 22 to 34 minutes to complete.
 2. Show a performance graph of a particular benchmark function.
-    Takes around 5 to 8 seconds to complete.
-Choose an option: 1
-
+   Takes around 5 to 8 seconds to complete.
+Choose an option:
 Benchmark Function | Mean Fitness Value | Standard Deviation of Fitness Values
 ==============================================================================
                 F1 |               0.00 |                                 0.00
@@ -12,11 +11,11 @@ Benchmark Function | Mean Fitness Value | Standard Deviation of Fitness Values
 ------------------------------------------------------------------------------
                 F3 |               0.00 |                                 0.00
 ------------------------------------------------------------------------------
-                F4 |               0.00 |                                 0.00
+                F4 |               0.24 |                                 0.96
 ------------------------------------------------------------------------------
-                F5 |              20.94 |                                 0.00
+                F5 |              20.34 |                                 3.15
 ------------------------------------------------------------------------------
 
-real    28m6.960s
-user    28m3.345s
-sys     0m4.992s
+real    27m29.078s
+user    27m33.303s
+sys     0m2.624s

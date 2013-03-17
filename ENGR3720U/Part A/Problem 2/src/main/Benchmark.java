@@ -14,7 +14,7 @@ public class Benchmark {
 
     private final int generations;
     private final DifferentialEvolution evolutionaryMechanism;
-    private final String sortTitle;
+    private final String shortTitle;
 
     public Benchmark(final FitnessFunction fitness, final double lowerBound, final double upperBound) {
         final int n = 30;
@@ -31,7 +31,7 @@ public class Benchmark {
 
         this.generations = n * 1000;
         this.evolutionaryMechanism = new DifferentialEvolution(params);
-        this.sortTitle = fitness.getClass().getSimpleName();
+        this.shortTitle = fitness.getClass().getSimpleName();
     }
 
     private double[] run() {
@@ -66,8 +66,8 @@ public class Benchmark {
         return sample;
     }
 
-    public void viewPerformance() {
-        final Chart chart = new Chart(this.getTitle());
+    public void viewPerformance(final boolean logScale) {
+        final Chart chart = new Chart(this.getTitle(), logScale);
 
         chart.setVisible(true);
         chart.pack();
@@ -78,6 +78,6 @@ public class Benchmark {
     }
 
     public String getShortTitle() {
-        return this.sortTitle;
+        return this.shortTitle;
     }
 }
