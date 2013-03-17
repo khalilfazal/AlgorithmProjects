@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -25,12 +26,19 @@ public class Chart extends ApplicationFrame {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 functionName,
                 "Generation",
-                "Best fitness value so far (log scale)",
+                null,
                 data,
                 PlotOrientation.VERTICAL,
                 false,
                 true,
                 false);
+
+        // Set Logarithmic Y-Axis
+        final LogAxis log = new LogAxis("Best Fitness Value So Far (log10 scale)");
+        log.setAutoRangeMinimumSize(Double.MIN_VALUE);
+        log.setSmallestValue(Double.MIN_NORMAL);
+
+        chart.getXYPlot().setRangeAxis(log);
 
         final ChartPanel panel = new ChartPanel(chart);
         panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -39,11 +47,7 @@ public class Chart extends ApplicationFrame {
 
     public void show(final double[] data) {
         for (int i = 0; i < data.length; i++) {
-            if (data[i] == 0) {
-                data[i] = data[i - 1];
-            }
-
-            this.series.add(i, Math.log(data[i]));
+            this.series.add(i, data[i]);
         }
     }
 }
