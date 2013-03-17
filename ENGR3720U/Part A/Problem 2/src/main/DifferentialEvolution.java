@@ -1,5 +1,6 @@
 package main;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Random;
 import fitnessFunctions.FitnessFunction;
 
 /**
- * Models the differential evolution algorithm
+ * Models the {@link DifferentialEvolution} algorithm
  * 
  * @author Khalil Fazal
  * @studentNumber 100425046
@@ -18,30 +19,16 @@ import fitnessFunctions.FitnessFunction;
  * @studentNumber 100252234
  */
 public class DifferentialEvolution {
-    // A uniformly distributed random number generator
-    // private static final Random generator = new SecureRandom();
 
-    // A faster but weaker random number generator
+    /**
+     * A faster but weaker random number generator. In previous iterations,
+     * {@link SecureRandom}, a slow and uniformly distributed random number
+     * generator was used instead of {@link Random}.
+     */
     private static final Random generator = new Random();
 
     /**
-     * Casts an object to a double. Needed if the object is an instance of an
-     * Integer.
-     * 
-     * @param object
-     *            the object that needs to be cast
-     * @return a casted double
-     */
-    private static double castToDouble(final Object object) {
-        if (object instanceof Integer) {
-            return ((Integer) object).doubleValue();
-        } else {
-            return (double) object;
-        }
-    }
-
-    /**
-     * Generates a random double in a range
+     * Generates a {@link Random} double from between a range
      * 
      * @param low
      *            the range's lower bound
@@ -53,35 +40,54 @@ public class DifferentialEvolution {
         return low + (high - low) * generator.nextDouble();
     }
 
-    // A setting to indicate whether to maximize or minimize the fitness
-    // function
+    /**
+     * Indicates whether to maximize or minimize the {@link FitnessFunction}
+     */
     private final boolean max;
 
-    // The problem's dimensionality
+    /**
+     * The problem's dimensionality
+     */
     private final int dimensions;
 
-    // Population size
+    /**
+     * Population size
+     */
     private final int size;
 
-    // Mutation constant
+    /**
+     * Mutation constant
+     */
     private final double mutation;
 
-    // Crossover rate
+    /**
+     * Crossover rate
+     */
     private final double crossover;
 
-    // The lower bound of each parameter in a solution
+    /**
+     * The lower bound of each parameter in a solution
+     */
     private final double lowerBound;
 
-    // the upper bound of each parameter in a solution
+    /**
+     * the upper bound of each parameter in a solution
+     */
     private final double upperBound;
 
-    // Objective function or fitness function
+    /**
+     * Objective function or fitness function
+     */
     private final FitnessFunction function;
 
-    // Population of possible solutions
+    /**
+     * Population of possible solutions
+     */
     private List<double[]> population;
 
-    // Fitness values for each solution in the population
+    /**
+     * Fitness values for each solution in the population
+     */
     private List<Double> fitnesses;
 
     /**
@@ -94,10 +100,10 @@ public class DifferentialEvolution {
         this.max = (boolean) params.get("max");
         this.dimensions = (int) params.get("dimensions");
         this.size = (int) params.get("size");
-        this.mutation = castToDouble(params.get("mutation"));
-        this.crossover = castToDouble(params.get("crossover"));
-        this.lowerBound = castToDouble(params.get("lower"));
-        this.upperBound = castToDouble(params.get("upper"));
+        this.mutation = (double) params.get("mutation");
+        this.crossover = (double) params.get("crossover");
+        this.lowerBound = (double) params.get("lower");
+        this.upperBound = (double) params.get("upper");
         this.function = (FitnessFunction) params.get("fitness");
 
         // Can not proceed if the dimension is negative.
@@ -128,6 +134,9 @@ public class DifferentialEvolution {
         this.reset();
     }
 
+    /**
+     * Reset the population back to a random state.
+     */
     public void reset() {
         this.createInitial();
         this.calculateFitnesses();
@@ -204,6 +213,9 @@ public class DifferentialEvolution {
         return best;
     }
 
+    /**
+     * @return The {@link FitnessFunction}'s full name
+     */
     public String getFunctionName() {
         return this.function.toString();
     }
