@@ -52,9 +52,31 @@ public class Main {
 		
 		while (!fitnessAchieved)
 		{
-			//select chromosome here
-			fitnessAchieved = true;
+			
+			
+			
+			
+			//Adds total fitness of all chromosomes in current population
+			//This is done by adding fitness of all genes, and if fitness of any one is 0, then while loop ends
+			int tempFitness;
+			fitnessAchieved = false;
+			
+			for(int outer = 0; outer < 8; outer++)
+			{
+				tempFitness = 0;
+				for(int inner = 0; inner < 8; inner++)
+				{
+					tempFitness += Global.currentFitness[outer][inner];
+				}
+				
+				//If total fitness of a chromosome is 0, then fitnessAchieved is true
+				if (tempFitness == 0)
+					fitnessAchieved = true;
+			}
 			
 		}
+		
+		
+		
 	}
 }

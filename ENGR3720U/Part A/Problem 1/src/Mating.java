@@ -86,8 +86,7 @@ public class Mating {
 		
 		//Sends both offspring to addCurrent, which adds them to the current population
 		Population.addCurrent(offspringA);
-		Population.addCurrent(offspringB);
-		
+		Population.addCurrent(offspringB);		
 	}
 	
 	public static int chooseParent()

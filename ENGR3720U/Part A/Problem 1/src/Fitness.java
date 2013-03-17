@@ -26,6 +26,7 @@ public class Fitness {
 		//Outer queen is the base queen which is being compared to all the inner queens aka the other queens
 		for (int chromosome = 0; chromosome <8 ; chromosome++)
 		{
+			System.out.println();
 			for (int column = 0; column < 8; column++)
 			{
 				for (int row = 0; row < 8; row++)
@@ -41,18 +42,18 @@ public class Fitness {
 					//Two queens share a horizontal row
 					else if (Global.currentGeneration[chromosome][column] == Global.currentGeneration[chromosome][row]){					
 						Global.currentFitness[column][row]++;
-						System.out.println("Queen " + column + " and Queen " + row + " are conflicting horizontally");
+						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting horizontally");
 					}
 					//Two queens are sharing a diagonal line
 					//formula is ((row + column) - (row + column)) == (divisible by 2)
 					//else if (((Math.abs((Global.currentGeneration[outer] + outer) - (Global.currentGeneration[inner] + inner))) % 2) == 0){
 					else if ((Global.currentGeneration[chromosome][column] + column) == (Global.currentGeneration[chromosome][row] + row)){
 						Global.currentFitness[chromosome][column]++;
-						System.out.println("Queen " + column + " and Queen " + row + " are conflicting diagonally, up");
+						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting diagonally, up");
 					}
 					else if ((Math.abs((Math.abs(Global.currentGeneration[chromosome][column] - column)) - (Math.abs(Global.currentGeneration[chromosome][row] - row)))) == 0){
 						Global.currentFitness[chromosome][column]++;
-						System.out.println("Queen " + column + " and Queen " + row + " are conflicting diagonally");
+						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting diagonally");
 					}
 				}
 			}
