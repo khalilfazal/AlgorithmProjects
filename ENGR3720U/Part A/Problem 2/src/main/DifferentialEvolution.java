@@ -144,6 +144,8 @@ public class DifferentialEvolution {
 
     /**
      * Generates the initial random population which is uniformly distributed.
+     * 
+     * Worst-case time complexity: O(this.size * this.dimensions)
      */
     private void createInitial() {
         this.population = new ArrayList<double[]>(this.size);
@@ -161,6 +163,9 @@ public class DifferentialEvolution {
 
     /**
      * Calculates the fitness values for each solution in the population
+     * 
+     * Worst-case time complexity: O(this.size * T(this.dimensions)) where T(x)
+     * is the complexity of the fitness function.
      */
     private void calculateFitnesses() {
         if (this.fitnesses == null) {
@@ -199,6 +204,8 @@ public class DifferentialEvolution {
     /**
      * Calculates the best fitness value in the current generation.
      * 
+     * Worst-case time complexity: O(this.size)
+     * 
      * @return the best fitness value in the current generation
      */
     public Double bestFitnessValue() {
@@ -222,6 +229,8 @@ public class DifferentialEvolution {
 
     /**
      * Choose 3 distinct parents from the current population ignoring an index.
+     * 
+     * Worst-case time complexity: O(this.size)
      * 
      * @param ignore
      *            the index from the population to ignore
@@ -363,15 +372,11 @@ public class DifferentialEvolution {
     private boolean selectShuffled(final double originalFitness, final double[] shuffled) {
         final boolean condition = originalFitness > this.function.apply(shuffled);
 
-        /*  condition | this.max | return
-         * ===========+==========+========
-         *    false   |   false  | false
-         * -----------+----------+--------
-         *    false   |   true   | true
-         * -----------+----------+--------
-         *    true    |   false  | true
-         * -----------+----------+--------
-         *    true    |   true   | false
+        /*
+         * condition | this.max | return ===========+==========+======== false |
+         * false | false -----------+----------+-------- false | true | true
+         * -----------+----------+-------- true | false | true
+         * -----------+----------+-------- true | true | false
          * -----------+----------+--------
          */
 
