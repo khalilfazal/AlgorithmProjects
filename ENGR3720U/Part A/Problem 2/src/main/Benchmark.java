@@ -7,6 +7,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
+import ui.EvolutionaryGraph;
+
 import com.google.gson.internal.StringMap;
 
 import fitnessFunctions.FitnessFunction;
@@ -86,32 +88,17 @@ public class Benchmark {
     }
 
     /**
-     * Performs one (1) run of the {@link DifferentialEvolution} mechanism
-     */
-    private void run() {
-        this.evolutionaryMechanism.reset();
-
-        // final long startTime = System.nanoTime();
-
-        for (int i = 0; i < this.generations; i++) {
-            this.evolutionaryMechanism.repopulate();
-
-            try {
-                this.bests.put(this.evolutionaryMechanism.bestFitnessValue());
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // System.out.println(this.population);
-        // System.out.println(System.nanoTime() - startTime);
-    }
-
-    /**
      * @return The full name of the {@link FitnessFunction}
      */
     public String getTitle() {
         return this.evolutionaryMechanism.getFunctionName();
+    }
+
+    /**
+     * @return A short-hand representation of the {@link FitnessFunction}
+     */
+    public String getShortTitle() {
+        return this.shortTitle;
     }
 
     /**
@@ -154,17 +141,30 @@ public class Benchmark {
      *            Whether to scale the y-axis logarithmically or not
      */
     public void viewPerformance(final boolean logScale) {
-        final EvolutionaryGraph graph = new EvolutionaryGraph(this.getTitle(), this.bests, logScale);
-
-        new Thread(graph).start();
+        new Thread(new EvolutionaryGraph(this.getTitle(), this.bests, logScale)).start();
 
         this.run();
     }
 
     /**
-     * @return A short-hand representation of the {@link FitnessFunction}
+     * Performs one (1) run of the {@link DifferentialEvolution} mechanism
      */
-    public String getShortTitle() {
-        return this.shortTitle;
+    private void run() {
+        this.evolutionaryMechanism.reset();
+
+        // final long startTime = System.nanoTime();
+
+        for (int i = 0; i < this.generations; i++) {
+            this.evolutionaryMechanism.repopulate();
+
+            try {
+                this.bests.put(this.evolutionaryMechanism.bestFitnessValue());
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // System.out.println(this.population);
+        // System.out.println(System.nanoTime() - startTime);
     }
 }
