@@ -11,7 +11,10 @@ package fitnessFunctions;
  * @studentNumber 100252234
  */
 public class F4 extends FitnessFunction {
+
     /**
+     * <a href="http://latex.codecogs.com/svg.latex?f_4\left(X\right)=\sum_{i=1}^{n-1}\left[100\left(x_{x+1}-x_i^2\right)^2+\left(1-x_i\right)^2\right]">Formula in LaTeX</a>
+     * 
      * @see fitnessFunctions.FitnessFunction#apply(double[])
      */
     @Override

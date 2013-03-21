@@ -11,7 +11,10 @@ package fitnessFunctions;
  * @studentNumber 100252234
  */
 public class F1 extends FitnessFunction {
+
     /**
+     * <a href="http://latex.codecogs.com/svg.latex?f_1\left(X\right)=\sum_{i=1}^nx_i^2">Formula in LaTeX</a>
+     * 
      * @see fitnessFunctions.FitnessFunction#apply(double[])
      */
     @Override

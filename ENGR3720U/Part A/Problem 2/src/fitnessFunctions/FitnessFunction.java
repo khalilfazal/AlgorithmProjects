@@ -13,6 +13,7 @@ import com.google.common.base.Function;
  * @studentNumber 100252234
  */
 public abstract class FitnessFunction implements Function<double[], Double> {
+
     /**
      * Evaluates the {@link FitnessFunction} given parameters
      * 

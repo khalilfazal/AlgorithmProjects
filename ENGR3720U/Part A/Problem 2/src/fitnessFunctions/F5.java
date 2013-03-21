@@ -11,7 +11,10 @@ package fitnessFunctions;
  * @studentNumber 100252234
  */
 public class F5 extends FitnessFunction {
+
     /**
+     * <a href="f_5\left(X\right)=10n+\sum_{i=1}^n\left(x_i^2-10\cos\left(2\pi x_i\right)\right)">Formula in LaTeX</a>
+     * 
      * @see fitnessFunctions.FitnessFunction#apply(double[])
      */
     @Override
