@@ -5,7 +5,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Vector;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -184,47 +183,23 @@ public class Reporter {
      * 22 to 34 minutes with {@link Random}.
      */
     public static void showResults() {
-        /*final StringBuilder output = new StringBuilder();
-        final int lineLength = 78;
+        final Object[] functionLabels = new Object[benchmarks.length];
 
-        output.append("\n");
-        output.append("Benchmark Function | Mean Fitness Value | Standard Deviation of Fitness Values\n");
-        output.append(createLine('=', lineLength));
-        output.append("\n");
-
-        // final long startTime = System.nanoTime(); 
-
-        for (final Benchmark benchmark : benchmarks) {
-            final SummaryStatistics sample = benchmark.getSample();
-
-            final double mean = sample.getMean();
-            final double stddev = sample.getStandardDeviation();
-
-            output.append(String.format("%18s | %18.2f | %36.2f\n", benchmark.getShortTitle(), mean, stddev));
-            output.append(createLine('-', lineLength));
-            output.append("\n");
+        for (int i = 0; i < benchmarks.length; i++) {
+            functionLabels[i] = benchmarks[i].getShortTitle();
         }
 
-        // System.out.println(System.nanoTime() - startTime);
+        final BlockingDeque<Object[]> rows = new LinkedBlockingDeque<Object[]>(benchmarks.length);
 
-        System.out.println(output.toString());*/
-
-        final BlockingDeque<Vector<Object>> rows = new LinkedBlockingDeque<Vector<Object>>(benchmarks.length);
-
-        new Thread(new StatisticsTable(rows)).start();
+        new Thread(new StatisticsTable(functionLabels, rows)).start();
 
         for (final Benchmark benchmark : benchmarks) {
             final SummaryStatistics sample = benchmark.getSample();
 
             try {
-                rows.put(new Vector<Object>() {
-                    private static final long serialVersionUID = 429635938388808072L;
-
-                    {
-                        this.add(benchmark.getShortTitle());
-                        this.add(sample.getMean());
-                        this.add(sample.getStandardDeviation());
-                    }
+                rows.put(new Object[] {
+                        sample.getMean(),
+                        sample.getStandardDeviation()
                 });
             } catch (final InterruptedException e) {
                 e.printStackTrace();

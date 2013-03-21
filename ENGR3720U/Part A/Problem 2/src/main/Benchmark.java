@@ -110,6 +110,7 @@ public class Benchmark {
     public SummaryStatistics getSample() {
         final SummaryStatistics sample = new SummaryStatistics();
 
+        // for (int i = 0; i < 2; i++) {
         for (int i = 0; i < this.runs; i++) {
             this.run();
             sample.addValue(this.bests.getLast());
