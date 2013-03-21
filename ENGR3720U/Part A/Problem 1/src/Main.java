@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * @author Rayhaan Shakeel 100425726
  *
@@ -33,17 +35,18 @@ public class Main {
 		Population.randomInitial();		
 		
 		//If initial generation's fitness is perfect, program will end
-		if (Fitness.calculateTotalFitness(0) == 0)
+		Fitness.calculateTotalFitness();
+		if (Global.totalFitness == 0)
 			fitnessAchieved = true;
 		
 		Global.parentA = 4;
 		Global.parentB = 5;
 		Mating.Crossover();
 		
-		for (int outer = 0; outer < 8; outer++)
+		for (int outer = 0; outer < Global.populationSize; outer++)
 		{
 			//Global.generationAge++; GENERATION AGE IS INCREMENTED IN Population.randomInitial()
-			for (int inner = 0; inner < 8; inner++)
+			for (int inner = 0; inner < Global.populationSize; inner++)
 			{
 				System.out.println("Fitness of Chromosome " + inner + " of Initial Parent " + outer + " : " + Global.currentGeneration[outer][inner] + " - " + Global.currentFitness[outer][inner]);
 			}
@@ -51,32 +54,52 @@ public class Main {
 		}
 		
 		while (!fitnessAchieved)
-		{
+		{		
+			Population.addCurrent();
+			//Fitness.addBestFitness();
+			//Fitness.addAverageFitness();
+			Fitness.checkForSolution();
+			Population.newGeneration();
+			Global.currentChildIndex = 0;
+			System.out.println("Generation: " + Global.generationAge);
 			
+			Random random = new Random();
+			int matingProbability = random.nextInt(10);
 			
-			
+			//Checks for 80% crossover probability
+			if (matingProbability < 8){
+				Mating.Crossover();
+				System.out.println("Crossover " + matingProbability);
+			}
+			//If Crossover is improbable it does Mutation
+			else if((matingProbability < 5) && (matingProbability >= 0))
+			{
+				Mating.Mutation();
+				System.out.println("Mutation " + matingProbability);
+			}
+			//Last resort is Cloning
+			else{
+				Mating.Cloning();
+				System.out.println("Cloning " + matingProbability);
+			}
 			
 			//Adds total fitness of all chromosomes in current population
 			//This is done by adding fitness of all genes, and if fitness of any one is 0, then while loop ends
 			int tempFitness;
 			fitnessAchieved = false;
 			
-			for(int outer = 0; outer < 8; outer++)
-			{
-				tempFitness = 0;
-				for(int inner = 0; inner < 8; inner++)
-				{
-					tempFitness += Global.currentFitness[outer][inner];
-				}
-				
-				//If total fitness of a chromosome is 0, then fitnessAchieved is true
-				if (tempFitness == 0)
-					fitnessAchieved = true;
-			}
+			Fitness.calculateTotalFitness();
 			
+			if (Global.totalFitness == 0)
+				fitnessAchieved = true;
 		}
 		
+		System.out.println("Fitness achieved after " + Global.generationAge + " generations");
+		System.out.print("Solution: ");
 		
-		
+		for (int i = 0; i < Global.populationSize; i++)
+		{
+			System.out.print(" " + Global.currentGeneration[Global.solutionChild][i] +" ");
+		}
 	}
 }

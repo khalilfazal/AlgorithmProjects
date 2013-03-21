@@ -24,12 +24,11 @@ public class Fitness {
 		
 		//This for loop calculates the fitness for all the queens in the current population
 		//Outer queen is the base queen which is being compared to all the inner queens aka the other queens
-		for (int chromosome = 0; chromosome <8 ; chromosome++)
+		for (int chromosome = 0; chromosome < Global.populationSize ; chromosome++)
 		{
-			System.out.println();
-			for (int column = 0; column < 8; column++)
+			for (int column = 0; column < Global.populationSize; column++)
 			{
-				for (int row = 0; row < 8; row++)
+				for (int row = 0; row < Global.populationSize; row++)
 				{
 					//If currently traversed inner queen shares a row with the outer queen, the outer queen's
 					//fitness value is increased
@@ -38,22 +37,9 @@ public class Fitness {
 					if (column == row){
 						//do nothing since you don't want to compare the current queen with itself, doing so
 						//will corrupt fitness value
-					}
-					//Two queens share a horizontal row
-					else if (Global.currentGeneration[chromosome][column] == Global.currentGeneration[chromosome][row]){					
-						Global.currentFitness[column][row]++;
-						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting horizontally");
-					}
-					//Two queens are sharing a diagonal line
-					//formula is ((row + column) - (row + column)) == (divisible by 2)
-					//else if (((Math.abs((Global.currentGeneration[outer] + outer) - (Global.currentGeneration[inner] + inner))) % 2) == 0){
-					else if ((Global.currentGeneration[chromosome][column] + column) == (Global.currentGeneration[chromosome][row] + row)){
-						Global.currentFitness[chromosome][column]++;
-						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting diagonally, up");
-					}
-					else if ((Math.abs((Math.abs(Global.currentGeneration[chromosome][column] - column)) - (Math.abs(Global.currentGeneration[chromosome][row] - row)))) == 0){
-						Global.currentFitness[chromosome][column]++;
-						System.out.println("Chromosome " + chromosome +" Queen " + column + " and Queen " + row + " are conflicting diagonally");
+					}					
+					else if (collisionDetection(Global.currentGeneration[chromosome][column], column, Global.currentGeneration[chromosome][row], row)) {
+					     Global.currentFitness[chromosome][column]++;
 					}
 				}
 			}
@@ -89,6 +75,7 @@ public class Fitness {
 	{
 		//Resets totalFitness
 		Global.totalFitness = 0;
+		calculatePopulationFitness();
 		
 		for (int outer = 0; outer < Global.populationSize; outer++)
 		{
@@ -98,12 +85,97 @@ public class Fitness {
 			}
 		}
 		
+		System.out.println("Global fitness is " + Global.totalFitness);
+		System.out.println("Average fitness is " + (Global.totalFitness)/Global.populationSize);
+		 
+		
 	}
 	
-	//Calculates the total fitness for previous generation
-	public static void calculatePreviousFitness()
+	public static boolean collisionDetection(int row1, int col1, int row2, int col2) {
+		return (row1 != row2 && col1 != col2 && (row1 - row2) != (col1 - col2) && (row1 - row2) != (col2 - col1) ? false : true);
+	}
+	
+	public static void addAverageFitness() 
 	{
+		int average = 0;
+		String averageFitness;
 		
+		for (int j = 0; j < Global.populationSize;j++)
+		{
+			for (int i = 0; i < Global.populationSize;i++)
+			{
+			average += Global.currentFitness[j][i];
+			}
+		}
 		
+		average = average / Global.populationSize;
+		averageFitness = Integer.toString(average);
+		
+		Global.allAverageFitness.add(averageFitness);
+	}
+	
+	public static void addBestFitness() 
+	{
+		String best;
+		int temp = 99;
+		int localTotal = 0;
+		
+		for (int j = 0; j < Global.populationSize;j++)
+		{
+			if (temp > 0)
+				temp = 0;
+			else if (temp == 0)
+			{
+				System.out.println("Solution FOUND! Generation: " + Global.generationAge);
+				System.exit(0);			
+			}
+			else if (temp < 5)
+				System.out.println("temp is " + temp);
+			
+			for (int i = 0; i < Global.populationSize;i++)
+			{
+				localTotal += Global.currentFitness[j][i];
+				
+				temp+= Global.currentFitness[j][i];
+			}
+			
+			
+				
+		}
+		
+		best = Integer.toString(temp);
+		
+		Global.allBestFitness.add(best);
+		System.out.println("Best Fitness is " + temp);
+		
+		if (temp == 0)
+		{
+			System.out.println("Solution FOUND! Generation: " + Global.generationAge);
+			System.exit(0);
+		}
+	}
+	
+	public static void checkForSolution(){
+		
+		int localTotal;
+		
+		for (int j = 0; j < Global.populationSize;j++)
+		{
+			localTotal = 0;
+			
+			for (int i = 0; i < Global.populationSize;i++)
+			{				
+				localTotal+= Global.currentFitness[j][i];
+			}
+			
+			if (localTotal == 0){
+				System.out.println("Solution found!" + Global.generationAge);
+				System.exit(0);
+			}
+			else if (localTotal < 5)
+				System.out.println("Less than 5!!!!!!!!!!!!!!!!!!1");
+			
+				
+		}
 	}
 }

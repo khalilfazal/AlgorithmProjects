@@ -8,6 +8,7 @@ public class Population {
 
 	/**
 	 * @param args
+	 * @category Randomly generates an initial population of 8 chromosomes
 	 */
 	//Randomly generates an initial population of 8 chromosomes
 	public static void randomInitial() {
@@ -22,11 +23,11 @@ public class Population {
 		int temp;
 		
 		//For loop randomly generates an initial population
-		for (int outer = 0; outer < 8; outer++)
+		for (int outer = 0; outer < Global.populationSize; outer++)
 		{
-			for (int inner = 0; inner < 8 ;inner++)
+			for (int inner = 0; inner < Global.populationSize ;inner++)
 			{				
-				temp = randomGenerator.nextInt(8); 
+				temp = randomGenerator.nextInt(Global.populationSize); 
 				//Global.allGenerations[Global.generationAge][i] = temp;
 				Global.currentGeneration[outer][inner] = temp;
 				System.out.println("Chromosome: " + outer + " gene: " + inner + " value: " + temp);
@@ -34,17 +35,37 @@ public class Population {
 		}
 		
 		//Calculates fitness for randomly generated initial population
-		Fitness.calculatePopulationFitness();		
+		Fitness.calculatePopulationFitness();
 	}
 	
 	
 	//Adds an array to the current population
-	public static void addCurrent(int[] newChild) 
+	public static void addCurrent(int[] child)
 	{
-		System.arraycopy(newChild, 0,  Global.currentGeneration[Global.currentChildIndex], 0, 8);
+		if (Global.currentChildIndex == 7)
+			return;
 		
-		//Fitness.calculateIndividualFitness(newChild); FITNESS IS CALCULATED ALL TOGETHER AT THE END
+		System.arraycopy(child, 0,  Global.currentGeneration[Global.currentChildIndex], 0, Global.populationSize);
 		
 		Global.currentChildIndex++;
 	}
+	
+	public static void addCurrent() 
+	{
+		
+		if (Global.currentChildIndex == 7)
+			return;
+		
+		System.arraycopy(Global.currentGeneration[Global.currentChildIndex], 0,  Global.previousGeneration[Global.currentChildIndex], 0, Global.populationSize);
+		
+		Global.currentChildIndex++;
+	}
+	
+	public static void newGeneration()
+	{
+		Global.generationAge++;
+		
+	}
+	
+	
 }
