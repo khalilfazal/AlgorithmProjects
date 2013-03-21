@@ -35,6 +35,10 @@ public class Global {
 	//public static int[][] allFitness = new int[8][];
 	public static ArrayList<String> allFitness = new ArrayList<String>();
 	
+	public static ArrayList<String> allBestFitness = new ArrayList<String>();
+	
+	public static ArrayList<String> allAverageFitness = new ArrayList<String>();
+	
 	public static int totalFitness;
 	
 	//Holds the number of generations generated
@@ -48,6 +52,8 @@ public class Global {
 	
 	//Stores index of ParentA in Global.previousGeneration
 	public static int parentB;
+	
+	public static int solutionChild;
 	
 
 }
