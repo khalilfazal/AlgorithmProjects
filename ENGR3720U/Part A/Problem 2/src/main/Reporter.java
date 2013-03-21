@@ -5,9 +5,14 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Vector;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
+import ui.EvolutionaryGraph;
+import ui.StatisticsTable;
 import fitnessFunctions.F1;
 import fitnessFunctions.F2;
 import fitnessFunctions.F3;
@@ -179,7 +184,7 @@ public class Reporter {
      * 22 to 34 minutes with {@link Random}.
      */
     public static void showResults() {
-        final StringBuilder output = new StringBuilder();
+        /*final StringBuilder output = new StringBuilder();
         final int lineLength = 78;
 
         output.append("\n");
@@ -187,7 +192,7 @@ public class Reporter {
         output.append(createLine('=', lineLength));
         output.append("\n");
 
-        // final long startTime = System.nanoTime();
+        // final long startTime = System.nanoTime(); 
 
         for (final Benchmark benchmark : benchmarks) {
             final SummaryStatistics sample = benchmark.getSample();
@@ -202,11 +207,33 @@ public class Reporter {
 
         // System.out.println(System.nanoTime() - startTime);
 
-        System.out.println(output.toString());
+        System.out.println(output.toString());*/
+
+        final BlockingDeque<Vector<Object>> rows = new LinkedBlockingDeque<Vector<Object>>(benchmarks.length);
+
+        new Thread(new StatisticsTable(rows)).start();
+
+        for (final Benchmark benchmark : benchmarks) {
+            final SummaryStatistics sample = benchmark.getSample();
+
+            try {
+                rows.put(new Vector<Object>() {
+                    private static final long serialVersionUID = 429635938388808072L;
+
+                    {
+                        this.add(benchmark.getShortTitle());
+                        this.add(sample.getMean());
+                        this.add(sample.getStandardDeviation());
+                    }
+                });
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
-     * Takes around 1.5 minutes to complete with SecureRandom, 5 to 8 seconds
+     * Takes around 1.5 minutes to complete with {@link SecureRandom}cureRandom, 5 to 8 seconds
      * with Random.
      * 
      * @param fitnessFuntion
