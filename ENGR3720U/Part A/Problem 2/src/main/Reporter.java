@@ -183,13 +183,13 @@ public class Reporter {
      * 22 to 34 minutes with {@link Random}.
      */
     public static void showResults() {
-        final Object[] functionLabels = new Object[benchmarks.length];
+        final String[] functionLabels = new String[benchmarks.length];
 
         for (int i = 0; i < benchmarks.length; i++) {
             functionLabels[i] = benchmarks[i].getShortTitle();
         }
 
-        final BlockingDeque<Object[]> rows = new LinkedBlockingDeque<Object[]>(benchmarks.length);
+        final BlockingDeque<String[]> rows = new LinkedBlockingDeque<String[]>(benchmarks.length);
 
         new Thread(new StatisticsTable(functionLabels, rows)).start();
 
@@ -197,9 +197,9 @@ public class Reporter {
             final SummaryStatistics sample = benchmark.getSample();
 
             try {
-                rows.put(new Object[] {
-                        sample.getMean(),
-                        sample.getStandardDeviation()
+                rows.put(new String[] {
+                        String.format("%.2f", sample.getMean()),
+                        String.format("%.2f", sample.getStandardDeviation())
                 });
             } catch (final InterruptedException e) {
                 e.printStackTrace();

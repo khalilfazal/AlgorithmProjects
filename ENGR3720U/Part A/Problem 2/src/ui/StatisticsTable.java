@@ -34,7 +34,7 @@ public class StatisticsTable implements Runnable {
     /**
      * A reference from where data will be listened from
      */
-    private final BlockingDeque<Object[]> dataQueue;
+    private final BlockingDeque<String[]> dataQueue;
 
     /**
      * The table can be modified through this object
@@ -49,7 +49,7 @@ public class StatisticsTable implements Runnable {
      * @param dataQueue
      *      A reference from where data will be listened from
      */
-    public StatisticsTable(final Object[] functionLabels, final BlockingDeque<Object[]> dataQueue) {
+    public StatisticsTable(final String[] functionLabels, final BlockingDeque<String[]> dataQueue) {
         this.dataQueue = dataQueue;
         this.capacity = this.dataQueue.remainingCapacity();
 
@@ -96,7 +96,7 @@ public class StatisticsTable implements Runnable {
     public void run() {
         try {
             for (int i = 0; i < this.capacity; i++) {
-                final Object[] values = this.dataQueue.take();
+                final String[] values = this.dataQueue.take();
 
                 this.model.setValueAt(values[0], i, 1);
                 this.model.setValueAt(values[1], i, 2);
