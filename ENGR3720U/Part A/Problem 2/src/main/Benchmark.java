@@ -3,7 +3,9 @@ package main;
 import java.awt.Window;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
@@ -31,7 +33,7 @@ public class Benchmark {
     /**
      * The amount of runs to perform while generating a sample
      */
-    private final int runs;
+    public static final int runs = 50;
 
     /**
      * The amount of generations per run
@@ -80,7 +82,6 @@ public class Benchmark {
         params.put("lower", lowerBound);
         params.put("upper", upperBound);
 
-        this.runs = 50;
         this.generations = n * 1000;
         this.evolutionaryMechanism = new DifferentialEvolution(params);
         this.shortTitle = function.getClass().getSimpleName();
@@ -103,18 +104,28 @@ public class Benchmark {
 
     /**
      * Performs all runs
-     * 
+     * @param progress 
+     *          Used to update the progress bar on the table of statistics
+     * @param latch 
+     *          Used to notify the progress bar to update
      * @return A sample of the best fitness values of the last generation of
      *         each run
      */
-    public SummaryStatistics getSample() {
+    public SummaryStatistics getSample(final AtomicInteger progress, final BlockingQueue<Boolean> latch) {
         final SummaryStatistics sample = new SummaryStatistics();
 
-        // for (int i = 0; i < 2; i++) {
-        for (int i = 0; i < this.runs; i++) {
+        for (int i = 0; i < Benchmark.runs; i++) {
             this.run();
             sample.addValue(this.bests.getLast());
             this.bests.clear();
+
+            progress.incrementAndGet();
+
+            try {
+                latch.put(true);
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         return sample;

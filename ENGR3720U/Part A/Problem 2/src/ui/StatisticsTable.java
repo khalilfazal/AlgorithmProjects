@@ -1,11 +1,16 @@
 package ui;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -13,6 +18,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import main.Benchmark;
 
 /**
  * Shows a table of statistics gathered for each function.
@@ -42,15 +49,36 @@ public class StatisticsTable implements Runnable {
     private final DefaultTableModel model;
 
     /**
+     * Used to update the progress bar in a worker thread
+     */
+    private final JProgressBar progressBar;
+
+    /**
+     * A value that can be updated atomically
+     */
+    private final AtomicInteger progress;
+
+    /**
+     * A countdown latch
+     */
+    private final BlockingQueue<Boolean> latch;
+
+    /**
      * Builds the table.
      * 
      * @param functionLabels
      *      An array of labels for the functions
+     * @param progress
+     *      A reference to how complete the table is
+     * @param latch 
+     *      A countdown latch
      * @param dataQueue
      *      A reference from where data will be listened from
      */
-    public StatisticsTable(final String[] functionLabels, final BlockingDeque<String[]> dataQueue) {
+    public StatisticsTable(final String[] functionLabels, final AtomicInteger progress, final BlockingQueue<Boolean> latch, final BlockingDeque<String[]> dataQueue) {
         this.dataQueue = dataQueue;
+        this.progress = progress;
+        this.latch = latch;
         this.capacity = this.dataQueue.remainingCapacity();
 
         this.model = new DefaultTableModel();
@@ -59,6 +87,7 @@ public class StatisticsTable implements Runnable {
         this.model.addColumn("Standard Deviation of Fitness Values");
 
         final JTable table = new JTable(this.model);
+        table.setEnabled(false);
 
         // Set the column width
         final TableCellRenderer rend = table.getTableHeader().getDefaultRenderer();
@@ -75,14 +104,25 @@ public class StatisticsTable implements Runnable {
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create scroll frame
+        // Set the frame's layout
+        final Container contentPane = frame.getContentPane();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+
+        // Add progress bar
+        this.progressBar = new JProgressBar(0, this.capacity * Benchmark.runs);
+        this.progressBar.setValue(0);
+        this.progressBar.setStringPainted(true);
+        frame.add(this.progressBar);
+
+        // Add scroll frame
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         frame.add(scrollPane);
 
         // Experimentally determined values
-        frame.setMinimumSize(new Dimension(551, 125));
+        frame.setMinimumSize(new Dimension(551, 145));
 
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -94,6 +134,10 @@ public class StatisticsTable implements Runnable {
      */
     @Override
     public void run() {
+        Thread.currentThread().setName(this.getClass().getSimpleName());
+
+        new Thread(new Progress(this.progressBar, this.progress, this.latch)).start();
+
         try {
             for (int i = 0; i < this.capacity; i++) {
                 final String[] values = this.dataQueue.take();

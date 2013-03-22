@@ -112,6 +112,8 @@ public class EvolutionaryGraph extends ApplicationFrame implements Runnable {
      */
     @Override
     public void run() {
+        Thread.currentThread().setName(this.getClass().getSimpleName());
+
         try {
             for (int i = 0; i < this.capacity; i++) {
                 this.series.add(i, this.dataQueue.take());

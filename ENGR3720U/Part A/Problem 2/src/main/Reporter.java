@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
@@ -189,12 +192,14 @@ public class Reporter {
             functionLabels[i] = benchmarks[i].getShortTitle();
         }
 
+        final AtomicInteger progress = new AtomicInteger(0);
+        final BlockingQueue<Boolean> latch = new LinkedBlockingQueue<Boolean>(1);
         final BlockingDeque<String[]> rows = new LinkedBlockingDeque<String[]>(benchmarks.length);
 
-        new Thread(new StatisticsTable(functionLabels, rows)).start();
+        new Thread(new StatisticsTable(functionLabels, progress, latch, rows)).start();
 
         for (final Benchmark benchmark : benchmarks) {
-            final SummaryStatistics sample = benchmark.getSample();
+            final SummaryStatistics sample = benchmark.getSample(progress, latch);
 
             try {
                 rows.put(new String[] {
