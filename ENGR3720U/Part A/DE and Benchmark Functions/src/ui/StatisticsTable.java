@@ -95,7 +95,6 @@ public class StatisticsTable extends Thread {
         // Add progress bar
         final JProgressBar progressBar = new JProgressBar(0, latch.remainingCapacity());
         this.progress = new Progress(progressBar, latch);
-        progressBar.setStringPainted(true);
         frame.add(progressBar);
 
         // Add scroll frame containing the table

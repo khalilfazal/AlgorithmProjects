@@ -41,6 +41,9 @@ public class Progress extends Thread {
         this.bar = bar;
         this.limit = bar.getMaximum();
         this.latch = latch;
+
+        this.bar.setString("00.0%");
+        this.bar.setStringPainted(true);
     }
 
     /**
@@ -51,9 +54,10 @@ public class Progress extends Thread {
         Thread.currentThread().setName(this.getClass().getSimpleName());
 
         try {
-            for (int i = 0; i < this.limit; i++) {
+            for (int i = 1; i <= this.limit; i++) {
                 this.latch.take();
                 this.bar.setValue(i);
+                this.bar.setString(String.format("%04.1f%%", 100.0 * i / this.limit));
             }
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
