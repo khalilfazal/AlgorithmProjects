@@ -121,9 +121,8 @@ public class StatisticsTable implements Runnable {
         frame.add(scrollPane);
 
         // Experimentally determined values
-        frame.setMinimumSize(new Dimension(551, 145));
+        frame.setSize(new Dimension(551, 145));
 
-        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
