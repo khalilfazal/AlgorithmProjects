@@ -15,6 +15,8 @@ public class F2 extends FitnessFunction {
     /**
      * <a href="http://latex.codecogs.com/svg.latex?f_2\left(X\right)=\sum_{i=1}^nix_i^2">Formula in LaTeX</a>
      * 
+     * Worst-case time complexity: O(parameters)
+     * 
      * @see fitnessFunctions.FitnessFunction#apply(double[])
      */
     @Override

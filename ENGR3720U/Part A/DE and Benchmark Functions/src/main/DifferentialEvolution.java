@@ -145,7 +145,7 @@ public class DifferentialEvolution {
     /**
      * Generates the initial random population which is uniformly distributed.
      * 
-     * Worst-case time complexity: O(this.size * this.dimensions)
+     * Worst-case time complexity: O({@link #size} * {@link #dimensions})
      */
     private void createInitial() {
         this.population = new ArrayList<double[]>(this.size);
@@ -164,7 +164,7 @@ public class DifferentialEvolution {
     /**
      * Calculates the fitness values for each solution in the population
      * 
-     * Worst-case time complexity: O(this.size * T(this.dimensions)) where T(x)
+     * Worst-case time complexity: O({@link #size} * T({@link #dimensions})) where T(x)
      * is the complexity of the fitness function.
      */
     private void calculateFitnesses() {
@@ -181,6 +181,15 @@ public class DifferentialEvolution {
 
     /**
      * Generates the next population.
+     * 
+     * Worst-case time complexity: O({@link #size} * T({@link #dimensions}) where T(x)
+     * is the complexity of the fitness function.
+     * 
+     * As specified in {@link Benchmark}'s constructor, {@link #size} = 2n and {@link #dimensions} = n.
+     * <br/><br/>
+     * T(n) is O(n^2).
+     * <br/><br/>
+     * Therefore, the worst-case time complexity for each repopulation is O(n^3).
      */
     public void repopulate() {
         final List<double[]> nextGen = new ArrayList<double[]>(this.size);
@@ -204,7 +213,7 @@ public class DifferentialEvolution {
     /**
      * Calculates the best fitness value in the current generation.
      * 
-     * Worst-case time complexity: O(this.size)
+     * Worst-case time complexity: O({@link #size})
      * 
      * @return the best fitness value in the current generation
      */
@@ -230,7 +239,7 @@ public class DifferentialEvolution {
     /**
      * Choose 3 distinct parents from the current population ignoring an index.
      * 
-     * Worst-case time complexity: O(this.size)
+     * Worst-case time complexity: O({@link #size})
      * 
      * @param ignore
      *            the index from the population to ignore
@@ -253,6 +262,8 @@ public class DifferentialEvolution {
     /**
      * Creates a mutated vector.
      * 
+     * Worst-case time complexity: O({@link #dimensions})
+     * 
      * @param randomParents
      *            From which a mutated vector is created
      * @return a mutated vector
@@ -267,6 +278,8 @@ public class DifferentialEvolution {
 
     /**
      * Finds the sum between two vectors.
+     * 
+     * Worst-case time complexity: O({@link #dimensions})
      * 
      * @param vector1
      *            The first vector
@@ -285,6 +298,8 @@ public class DifferentialEvolution {
     /**
      * Amplifies the vector by the mutation factor.
      * 
+     * Worst-case time complexity: O({@link #dimensions})
+     * 
      * @param vector
      *            The vector which will be amplified
      * @return the amplified vector
@@ -299,6 +314,8 @@ public class DifferentialEvolution {
 
     /**
      * Finds the difference between two vectors.
+     * 
+     * Worst-case time complexity: O({@link #dimensions})
      * 
      * @param vector1
      *            The first vector
@@ -316,6 +333,8 @@ public class DifferentialEvolution {
 
     /**
      * Enforces the lower and upper bounds of a solution's parameter
+     * 
+     * Worst-case time complexity: O({@link #dimensions})
      * 
      * @param vector
      *            the vector whose bounds need to be checked
@@ -337,6 +356,8 @@ public class DifferentialEvolution {
      * Shuffles two competing vectors to generate new solutions and the increase
      * the diversity of the population. It is assured that the shuffled vector
      * contains at least one parameter from the mutated vector.
+     * 
+     * Worst-case time complexity: O({@link #dimensions})
      * 
      * @param original
      *            The original vector
@@ -373,11 +394,16 @@ public class DifferentialEvolution {
         final boolean condition = originalFitness > this.function.apply(shuffled);
 
         /*
-         * condition | this.max | return ===========+==========+======== false |
-         * false | false -----------+----------+-------- false | true | true
-         * -----------+----------+-------- true | false | true
-         * -----------+----------+-------- true | true | false
-         * -----------+----------+--------
+         *  condition |  this.max |   return
+         * ===========+===========+===========
+         *    false   |   false   |   false    
+         * -----------+-----------+-----------
+         *    false   |   true    |   true
+         * -----------+-----------+-----------
+         *    true    |   false   |   true
+         * -----------+-----------+-----------
+         *    true    |   true    |   false
+         * -----------+-----------+-----------
          */
 
         return condition != this.max;

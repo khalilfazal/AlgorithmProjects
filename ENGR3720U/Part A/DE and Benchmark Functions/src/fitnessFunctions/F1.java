@@ -15,13 +15,15 @@ public class F1 extends FitnessFunction {
     /**
      * <a href="http://latex.codecogs.com/svg.latex?f_1\left(X\right)=\sum_{i=1}^nx_i^2">Formula in LaTeX</a>
      * 
+     * Worst-case time complexity: O(parameters)
+     * 
      * @see fitnessFunctions.FitnessFunction#apply(double[])
      */
     @Override
-    public Double apply(final double[] population) {
+    public Double apply(final double[] parameters) {
         double sum = 0.0;
 
-        for (final double element : population) {
+        for (final double element : parameters) {
             sum += Math.pow(element, 2);
         }
 
