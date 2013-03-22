@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
@@ -104,22 +103,19 @@ public class Benchmark {
 
     /**
      * Performs all runs
-     * @param progress 
-     *          Used to update the progress bar on the table of statistics
+     * 
      * @param latch 
      *          Used to notify the progress bar to update
      * @return A sample of the best fitness values of the last generation of
      *         each run
      */
-    public SummaryStatistics getSample(final AtomicInteger progress, final BlockingQueue<Boolean> latch) {
+    public SummaryStatistics getSample(final BlockingQueue<Boolean> latch) {
         final SummaryStatistics sample = new SummaryStatistics();
 
         for (int i = 0; i < Benchmark.runs; i++) {
             this.run();
             sample.addValue(this.bests.getLast());
             this.bests.clear();
-
-            progress.incrementAndGet();
 
             try {
                 latch.put(true);

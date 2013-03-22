@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.util.Collections;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -19,8 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import main.Benchmark;
-
 /**
  * Shows a table of statistics gathered for each function.
  * 
@@ -31,7 +28,7 @@ import main.Benchmark;
  * @author Baldip Bhogal
  * @studentNumber 100252234
  */
-public class StatisticsTable implements Runnable {
+public class StatisticsTable extends Thread {
 
     /**
      * The number of expected rows to display
@@ -49,36 +46,22 @@ public class StatisticsTable implements Runnable {
     private final DefaultTableModel model;
 
     /**
-     * Used to update the progress bar in a worker thread
+     * Will start in a new thread, controls the progress bar
      */
-    private final JProgressBar progressBar;
-
-    /**
-     * A value that can be updated atomically
-     */
-    private final AtomicInteger progress;
-
-    /**
-     * A countdown latch
-     */
-    private final BlockingQueue<Boolean> latch;
+    private final Thread progress;
 
     /**
      * Builds the table.
      * 
      * @param functionLabels
      *      An array of labels for the functions
-     * @param progress
-     *      A reference to how complete the table is
      * @param latch 
-     *      A countdown latch
+     *      A latch
      * @param dataQueue
      *      A reference from where data will be listened from
      */
-    public StatisticsTable(final String[] functionLabels, final AtomicInteger progress, final BlockingQueue<Boolean> latch, final BlockingDeque<String[]> dataQueue) {
+    public StatisticsTable(final String[] functionLabels, final BlockingQueue<Boolean> latch, final BlockingDeque<String[]> dataQueue) {
         this.dataQueue = dataQueue;
-        this.progress = progress;
-        this.latch = latch;
         this.capacity = this.dataQueue.remainingCapacity();
 
         this.model = new DefaultTableModel();
@@ -110,10 +93,10 @@ public class StatisticsTable implements Runnable {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
         // Add progress bar
-        this.progressBar = new JProgressBar(0, this.capacity * Benchmark.runs);
-        this.progressBar.setValue(0);
-        this.progressBar.setStringPainted(true);
-        frame.add(this.progressBar);
+        final JProgressBar progressBar = new JProgressBar(0, latch.remainingCapacity());
+        this.progress = new Progress(progressBar, latch);
+        progressBar.setStringPainted(true);
+        frame.add(progressBar);
 
         // Add scroll frame containing the table
         final JScrollPane scrollPane = new JScrollPane(table);
@@ -121,22 +104,27 @@ public class StatisticsTable implements Runnable {
         frame.add(scrollPane);
 
         // Experimentally determined values
-        frame.setSize(new Dimension(551, 145));
+        frame.setSize(new Dimension(551, 120));
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     /**
+     * @return A thread controlling the progress bar
+     */
+    public Thread getProgress() {
+        return this.progress;
+    }
+
+    /**
      * Adds data to the table as it's produced in the data queue.
      * 
-     * @see java.lang.Runnable#run()
+     * @see java.lang.Thread#run()
      */
     @Override
     public void run() {
         Thread.currentThread().setName(this.getClass().getSimpleName());
-
-        new Thread(new Progress(this.progressBar, this.progress, this.latch)).start();
 
         try {
             for (int i = 0; i < this.capacity; i++) {

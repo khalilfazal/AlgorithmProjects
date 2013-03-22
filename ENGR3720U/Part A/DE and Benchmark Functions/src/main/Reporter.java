@@ -9,7 +9,6 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
@@ -78,14 +77,16 @@ public class Reporter {
      * Prompts for a response from the user.
      * 
      * @param in
-     *            The input {@link Scanner} used to receive responses
+     *          The input {@link Scanner} used to receive responses
      * @param prompts
-     *            A prompt including a list of choices
+     *          A prompt including a list of choices
      * @param choices
-     *            The number of choices
+     *          The number of choices
+     * @param closeStream
+     *          Whether this is the last point user input will be taken from  
      * @return A selected choice
      */
-    private static int getSelection(final Scanner in, final Object[][] prompts, final int choices) {
+    private static int getSelection(final Scanner in, final Object[][] prompts, final int choices, final boolean closeStream) {
         Integer selection = null;
 
         for (final Object[] prompt : prompts) {
@@ -106,6 +107,10 @@ public class Reporter {
                     System.err.println("Invalid selection.");
                     selection = null;
                 } else {
+                    if (closeStream) {
+                        in.close();
+                    }
+
                     return selection;
                 }
             } else {
@@ -142,8 +147,9 @@ public class Reporter {
                 { "%sTakes around 5 to 8 seconds to complete.\n", TAB }
         };
 
-        switch (getSelection(in, initialPrompt, 2)) {
+        switch (getSelection(in, initialPrompt, 2, false)) {
             case 1:
+                in.close();
                 showResults();
                 break;
             case 2:
@@ -159,7 +165,7 @@ public class Reporter {
                     };
                 }
 
-                final int function = getSelection(in, functionPrompt, benchmarks.length) - 1;
+                final int function = getSelection(in, functionPrompt, benchmarks.length, false) - 1;
 
                 final Object[][] axisPrompt = new Object[][] {
                         { "\nAvailable Scales for the Y-Axis:" },
@@ -167,7 +173,7 @@ public class Reporter {
                         { "%s2. Logarithmic\n", TAB }
                 };
 
-                switch (getSelection(in, axisPrompt, 2)) {
+                switch (getSelection(in, axisPrompt, 2, true)) {
                     case 1:
                         viewPerformance(function, false);
                         break;
@@ -177,8 +183,6 @@ public class Reporter {
 
                 break;
         }
-
-        in.close();
     }
 
     /**
@@ -192,14 +196,18 @@ public class Reporter {
             functionLabels[i] = benchmarks[i].getShortTitle();
         }
 
-        final AtomicInteger progress = new AtomicInteger(0);
-        final BlockingQueue<Boolean> latch = new LinkedBlockingQueue<Boolean>(1);
+        final BlockingQueue<Boolean> latch = new LinkedBlockingQueue<Boolean>(benchmarks.length * Benchmark.runs);
         final BlockingDeque<String[]> rows = new LinkedBlockingDeque<String[]>(benchmarks.length);
+        final StatisticsTable table = new StatisticsTable(functionLabels, latch, rows);
 
-        new Thread(new StatisticsTable(functionLabels, progress, latch, rows)).start();
+        // Start the progress bar, start listening to changes in the latch
+        table.getProgress().start();
+
+        // Start populating the table
+        table.start();
 
         for (final Benchmark benchmark : benchmarks) {
-            final SummaryStatistics sample = benchmark.getSample(progress, latch);
+            final SummaryStatistics sample = benchmark.getSample(latch);
 
             try {
                 rows.put(new String[] {

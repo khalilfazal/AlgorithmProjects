@@ -1,7 +1,6 @@
 package ui;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JProgressBar;
 
@@ -15,7 +14,7 @@ import javax.swing.JProgressBar;
  * @author Baldip Bhogal
  * @studentNumber 100252234
  */
-public class Progress implements Runnable {
+public class Progress extends Thread {
 
     /**
      * The progress bar on the table
@@ -23,37 +22,29 @@ public class Progress implements Runnable {
     private final JProgressBar bar;
 
     /**
-     * How complete the table is
-     */
-    private final AtomicInteger progress;
-
-    /**
      * The number of increments
      */
     private final int limit;
 
     /**
-     * A countdown latch
+     * A latch
      */
     private final BlockingQueue<Boolean> latch;
 
     /**
      * @param bar
      *      The progress bar on the table
-     * @param progress
-     *      How complete the table is
      * @param latch
-     *      A countdown latch
+     *      A latch
      */
-    public Progress(final JProgressBar bar, final AtomicInteger progress, final BlockingQueue<Boolean> latch) {
+    public Progress(final JProgressBar bar, final BlockingQueue<Boolean> latch) {
         this.bar = bar;
-        this.progress = progress;
         this.limit = bar.getMaximum();
         this.latch = latch;
     }
 
     /**
-     * @see java.lang.Runnable#run()
+     * @see java.lang.Thread#run()
      */
     @Override
     public void run() {
@@ -62,10 +53,10 @@ public class Progress implements Runnable {
         try {
             for (int i = 0; i < this.limit; i++) {
                 this.latch.take();
-                this.bar.setValue(this.progress.get());
+                this.bar.setValue(i);
             }
         } catch (final InterruptedException e) {
-
+            Thread.currentThread().interrupt();
         }
     }
 }
