@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JProgressBar;
 
 /**
- * Controls the progress state of the table
+ * Controls the table's progress bar
  * 
  * @author Khalil Fazal
  * @studentNumber 100425046
@@ -57,6 +57,7 @@ public class Progress implements Runnable {
      */
     @Override
     public void run() {
+        Thread.currentThread().setName(this.getClass().getSimpleName());
 
         try {
             for (int i = 0; i < this.limit; i++) {

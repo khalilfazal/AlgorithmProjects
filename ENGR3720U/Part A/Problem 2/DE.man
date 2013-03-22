@@ -1,5 +1,0 @@
-.TH Differential Evolution and Benchmark
-.SH NAME
-DifferentialEvolution.jar \- A Runnable JAR File
-.SH USAGE
-\fBjava -jar DifferentialEvolution.jar\fP

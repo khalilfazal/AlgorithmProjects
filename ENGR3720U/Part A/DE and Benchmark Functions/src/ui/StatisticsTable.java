@@ -102,6 +102,7 @@ public class StatisticsTable implements Runnable {
 
         // Create frame
         final JFrame frame = new JFrame();
+        frame.setTitle(this.getClass().getSimpleName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set the frame's layout
@@ -114,7 +115,7 @@ public class StatisticsTable implements Runnable {
         this.progressBar.setStringPainted(true);
         frame.add(this.progressBar);
 
-        // Add scroll frame
+        // Add scroll frame containing the table
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         frame.add(scrollPane);
