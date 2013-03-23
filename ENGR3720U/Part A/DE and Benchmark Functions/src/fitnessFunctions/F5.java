@@ -13,7 +13,7 @@ package fitnessFunctions;
 public class F5 extends FitnessFunction {
 
     /**
-     * <a href="f_5\left(X\right)=10n+\sum_{i=1}^n\left(x_i^2-10\cos\left(2\pi x_i\right)\right)">Formula in LaTeX</a>
+     * <a href="http://latex.codecogs.com/svg.latex?f_5\left(X\right)=10n+\sum_{i=1}^n\left(x_i^2-10\cos\left(2\pi x_i\right)\right)">Formula in LaTeX</a>
      * 
      * Worst-case time complexity: O(parameters)
      * 
