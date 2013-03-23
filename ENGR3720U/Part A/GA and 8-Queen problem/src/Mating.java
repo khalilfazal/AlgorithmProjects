@@ -1,8 +1,12 @@
 import java.util.Random;
 
 /**
- * @author Rayhaan Shakeel 100425726
- *
+ * @author Khalil Fazal
+ * @studentNumber 100425046
+ * @author Rayhaan Shakeel
+ * @studentNumber 100425726
+ * @author Baldip Bhogal
+ * @studentNumber 100252234
  */
 
 	/**
@@ -14,11 +18,10 @@ import java.util.Random;
 	 */
 
 public class Mating {
-	/**
-	 * @param args
-	 */
 
-	//Performs crossover function
+	/**
+	 * This class handles the crossover mating of the chromosome.
+	 */
 	public static void Crossover(){
 		
 		//Random number generator
@@ -28,7 +31,7 @@ public class Mating {
 		int swapIndex = random.nextInt(8);
 		
 		//temporary variable
-		int[] temp = new int[Global.populationSize - swapIndex];
+		int[] temp = new int[8 - swapIndex];
 		
 		//temporary crossover offspring
 		int[] offspringA = new int[8];
@@ -42,62 +45,99 @@ public class Mating {
 		System.arraycopy(Global.currentGeneration[Global.parentB], 0, offspringB, 0, 8);
 		
 		
-//		System.out.print("offSpringA before: ");
-//		for (int i = 0; i < 8; i++){
-//			System.out.print(offspringA[i]);
-//			if (i == swapIndex)
-//				System.out.print("|");
-//		}
-//		
-//		System.out.println();
-//		System.out.print("offSpringB before: ");
-//		
-//		for (int i = 0; i < 8; i++){
-//			System.out.print(offspringB[i]);
-//			if (i == swapIndex)
-//				System.out.print("|");
-//		}
-		
 		//Performs crossover, by using a temporary array to swap
 		System.arraycopy(offspringA, swapIndex, temp, 0, temp.length);
 		System.arraycopy(offspringB, swapIndex, offspringA, swapIndex, temp.length);
 		System.arraycopy(temp, 0, offspringB, swapIndex, temp.length);
 
-//		System.out.println();
-//		System.out.print("offSpringA after: ");
-//		
-//		for (int i = 0; i < 8; i++){
-//			System.out.print(offspringA[i]);
-//			if (i == swapIndex)
-//				System.out.print("|");
-//		}
-//		
-//		System.out.println();
-//		System.out.print("offSpringB after: ");
-//		
-//		for (int i = 0; i < 8; i++){
-//			System.out.print(offspringB[i]);
-//			if (i == swapIndex)
-//				System.out.print("|");
-//		}
-//		
-//		System.out.println();
 		
 		//Both offspring for mutation
 		//If mutation probability is met, mutation is applied and arrays are returned
 		Mutation(offspringA);
 		
-		//Sends both offspring to addCurrent, which adds them to the current population
 		Population.addCurrent(offspringA);
 		Population.addCurrent(offspringB);		
-	}
+	} 
 	
+	/**
+	 * Chooses two parents for mating via the roulette selection method
+	 */
 	public static void chooseParents()
 	{
-		Random random = new Random();
 		
-		Global.parentA = random.nextInt(8);
-		Global.parentB = random.nextInt(8);
+		double totalFitness = 0;
+		int temp = 0, prev = 0;
+		
+		int[] rouletteWheelSlices = new int[Global.populationSize];
+		double[] fitnessRatios = new double[Global.populationSize];
+		int[] localTotal = new int[Global.populationSize];
+		Random random = new Random();		
+
+		boolean uniqueParent = false;
+		
+		for (int i = 0; i < localTotal.length; i++)
+		{
+			localTotal[i] = 0;
+		}
+		
+		//Calculates total fitness, sum of all fitness
+		//Needed to calculate fitness ratio
+		for (int outer = 0; outer < Global.populationSize; outer++)
+		{
+			for (int inner = 0; inner < 8; inner++)
+			{
+				totalFitness += Global.previousFitness[outer][inner];
+				localTotal[outer] += Global.previousFitness[outer][inner]; 
+			}
+		}		
+		
+		//Calculates the fitness ratio for all 8 solutions
+		for (int i = 0; i < Global.populationSize; i++)
+		{
+			fitnessRatios[i] = ((localTotal[i]/totalFitness) * 100);
+			//System.out.println("Fitness Ratio: "  + fitnessRatios[i] + ((localTotal[i]/totalFitness) * 100));
+		}
+		
+		temp = random.nextInt(100);
+		
+		//Chooses parentA through roulette selection
+		for (int outer = 1; outer < Global.populationSize; outer++)
+		{
+			prev = 0;
+			for (int inner = outer - 1; inner >= 0; inner--)
+			{
+				prev += fitnessRatios[inner];
+			}	
+			
+			if ((temp > prev) && (temp < (prev + fitnessRatios[outer])))
+			{
+				Global.parentA = outer;
+				//System.out.println("Parent A:" + Global.parentA);
+			}
+					
+		}	
+				
+		//Chooses parentB through roulette selection
+		//A loop is neccesary to ensure parentB is not the same as parentA
+		while(uniqueParent == false)
+		{
+			temp = random.nextInt(100);
+			
+			for (int outer = 1; outer < Global.populationSize; outer++)
+			{
+				prev = 0;
+				for (int inner = outer - 1; inner >= 0; inner--)
+				{
+					prev += fitnessRatios[inner];
+				}	
+				
+				if ((outer != Global.parentA) && (temp > prev) && (temp < (prev + fitnessRatios[outer])))
+				{
+					Global.parentB = outer;
+					uniqueParent = true;
+				}			
+			}
+		}
 	}
 	
 	//Performs a mutation on a particular chromosome sent as a parameter
@@ -105,14 +145,11 @@ public class Mating {
 	
 		//Random number generator
 		Random random = new Random();
-		int temp = random.nextInt(Global.populationSize);
+		int temp = random.nextInt(8);
 
-		//System.out.println("Non-mutated: " +chromosome[temp]);
-		chromosome[temp] = random.nextInt(Global.populationSize);
-		//Global.currentGeneration[Global.currentChildIndex] = random.nextInt(8);
+		chromosome[temp] = random.nextInt(8);
 		
-		//System.out.println("Mutated: " + chromosome[temp]);		
-		
+	
 		return chromosome;		
 	}
 	
@@ -123,7 +160,7 @@ public class Mating {
 		Random random = new Random();
 		int temp = random.nextInt(8);
 		System.out.println("Non-mutated: " + Global.currentGeneration[Global.currentChildIndex][temp]);
-		Global.currentGeneration[Global.currentChildIndex][temp] = random.nextInt(8);
+		Global.currentGeneration[Global.currentChildIndex][temp] = random.nextInt(Global.populationSize);
 		//Global.currentGeneration[Global.currentChildIndex] = random.nextInt(8);
 		
 		System.out.println("Mutated: " + Global.currentGeneration[Global.currentChildIndex][temp]);

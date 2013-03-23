@@ -1,12 +1,12 @@
 import java.util.*;
 
 /**
- * 
- */
-
-/**
- * @author Rayhaan Shakeel 100425726
- *
+ * @author Khalil Fazal
+ * @studentNumber 100425046
+ * @author Rayhaan Shakeel
+ * @studentNumber 100425726
+ * @author Baldip Bhogal
+ * @studentNumber 100252234
  */
 public class Global {
 
@@ -17,28 +17,30 @@ public class Global {
 	public static int[] initialGeneration = new int[8];
 	
 	//Holds the values of the current working generation
-	public static int[][] currentGeneration = new int[8][8];
+	public static int[][] currentGeneration = new int[Global.populationSize][8];
 	
 	//Holds the values of the previous established generation
-	public static int[][] previousGeneration = new int[8][8];
+	public static int[][] previousGeneration = new int[Global.populationSize][8];
 	
 	//Stores all the generated generations
 	public static int[][] allGenerations = new int[100][8];
 	
 	//Holds the fitness values for the current generation
-	public static int[][] currentFitness = new int[8][8];
+	public static int[][] currentFitness = new int[Global.populationSize][8];
 	
 	//Stores the fitness values for the previous generation
-	public static int[][] previousFitness = new int[8][8];
+	public static int[][] previousFitness = new int[Global.populationSize][8];
 	
-	//Holds the fitness values of all generated generations
-	//public static int[][] allFitness = new int[8][];
-	public static ArrayList<String> allFitness = new ArrayList<String>();
+	//Stores all the fitness values of every generation
+	public static ArrayList<Integer> allFitness = new ArrayList<Integer>();
 	
-	public static ArrayList<String> allBestFitness = new ArrayList<String>();
+	//Stores the best fitness of every generation
+	public static ArrayList<Integer> allBestFitness = new ArrayList<Integer>();
 	
-	public static ArrayList<String> allAverageFitness = new ArrayList<String>();
+	//Stores the average fitness of every generation
+	public static ArrayList<Integer> allAverageFitness = new ArrayList<Integer>();
 	
+	//Current possible solution's total fitness is stored here
 	public static int totalFitness;
 	
 	//Holds the number of generations generated
@@ -54,6 +56,10 @@ public class Global {
 	public static int parentB;
 	
 	public static int solutionChild;
+	
+	//Stores program start and end time
+	public static long startTime;
+	public static long endTime;
 	
 
 }
