@@ -16,40 +16,40 @@ Name='PersonalCharacter'
 Range=[0 1]
 NumMFs=5
 MF1='StuckUp':'trimf',[-0.6 0 0.4]
-MF2='Nice':'trimf',[0.1 0.5 0.9]
-MF3='Saint':'trimf',[0.6 1 1.4]
+MF2='Spoiled':'trimf',[0 0.25 0.5]
+MF3='Nice':'trimf',[0.1 0.5 0.9]
 MF4='Honest':'trimf',[0.5 0.75 1]
-MF5='Spoiled':'trimf',[0 0.25 0.5]
+MF5='Saint':'trimf',[0.6 1 1.4]
 
 [Input2]
 Name='EducationLevel'
 Range=[0 1]
 NumMFs=5
 MF1='Illiterate':'trimf',[-0.4 0 0.4]
-MF2='Average':'trimf',[0.1 0.5 0.9]
-MF3='Genius':'trimf',[0.6 1 1.4]
-MF4='Slow':'trimf',[0 0.25 0.5]
-MF5='Smart':'trimf',[0.5 0.75 1]
+MF2='Slow':'trimf',[0 0.25 0.5]
+MF3='Average':'trimf',[0.1 0.5 0.9]
+MF4='Smart':'trimf',[0.5 0.75 1]
+MF5='Genius':'trimf',[0.6 1 1.4]
 
 [Input3]
 Name='FinancialStanding'
 Range=[0 1]
 NumMFs=5
 MF1='Broke':'trimf',[-0.4 0 0.4]
-MF2='Average':'trimf',[0.1 0.5 0.9]
-MF3='Rich':'trimf',[0.6 1 1.4]
-MF4='Poor':'trimf',[0 0.25 0.5]
-MF5='Prosperous':'trimf',[0.5 0.75 1]
+MF2='Poor':'trimf',[0 0.25 0.5]
+MF3='Average':'trimf',[0.1 0.5 0.9]
+MF4='Prosperous':'trimf',[0.5 0.75 1]
+MF5='Rich':'trimf',[0.6 1 1.4]
 
 [Input4]
 Name='Beauty'
 Range=[0 1]
 NumMFs=5
 MF1='Ugly':'trimf',[-0.4 0 0.4]
-MF2='Average':'trimf',[0.1 0.5 0.9]
-MF3='Beautiful':'trimf',[0.6 1 1.4]
-MF4='Meh':'trimf',[0 0.25 0.5]
-MF5='Cute':'trimf',[0.5 0.75 1]
+MF2='Meh':'trimf',[0 0.25 0.5]
+MF3='Average':'trimf',[0.1 0.5 0.9]
+MF4='Cute':'trimf',[0.5 0.75 1]
+MF5='Beautiful':'trimf',[0.6 1 1.4]
 
 [Input5]
 Name='PreviousHistory'
@@ -64,9 +64,9 @@ Name='MarriageScore'
 Range=[0 1]
 NumMFs=5
 MF1='NeverInAMillionYears':'trimf',[-0.401503759398496 -0.00150375939849623 0.398496240601504]
-MF2='Potential':'trimf',[0.1 0.5 0.9]
-MF3='Destined':'trimf',[0.6 1 1.4]
-MF4='Risky':'trimf',[0 0.25 0.5]
-MF5='Promising':'trimf',[0.5 0.75 1]
+MF2='Risky':'trimf',[0 0.25 0.5]
+MF3='Potential':'trimf',[0.1 0.5 0.9]
+MF4='Promising':'trimf',[0.5 0.75 1]
+MF5='Destined':'trimf',[0.6 1 1.4]
 
 [Rules]
