@@ -15,11 +15,11 @@ DefuzzMethod='centroid'
 Name='PersonalCharacter'
 Range=[0 1]
 NumMFs=5
-MF1='NotNice':'gaussmf',[-0.6 0 0.4]
-MF2='SomewhatNice':'gaussmf',[0 0.25 0.5]
-MF3='Nice':'gaussmf',[0.1 0.5 0.9]
-MF4='VeryNice':'gaussmf',[0.5 0.75 1]
-MF5='ExtremelyNice':'gaussmf',[0.6 1 1.4]
+MF1='NotNice':'trimf',[-0.6 0 0.4]
+MF2='SomewhatNice':'trimf',[0 0.25 0.5]
+MF3='Nice':'trimf',[0.1 0.5 0.9]
+MF4='VeryNice':'trimf',[0.5 0.75 1]
+MF5='ExtremelyNice':'trimf',[0.6 1 1.4]
 
 [Input2]
 Name='EducationLevel'
