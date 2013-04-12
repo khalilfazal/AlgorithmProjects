@@ -1,2 +1,0 @@
-fismat = readfis('MarriageSystemFinal');
-getfis(fismat)

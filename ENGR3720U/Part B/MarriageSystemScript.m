@@ -1,5 +1,5 @@
 %Load Fuzzy Inference System from file
-fismat = readfis('MarriageSystemFinal');
+fismat = readfis('MarriageSystem');
 
 %fprintf('Welcome to our Fuzzy Marriage System.\n');
 %fprintf('Please enter values less between 1 and 0\n');
